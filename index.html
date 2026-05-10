@@ -12,7 +12,7 @@
     }
 
     html {
-    font-size: 26px;
+    font-size: clamp(14px, 3.5vw, 28px);
     }
 
     body {
@@ -97,7 +97,7 @@
     }
 
     .hero h1 {
-      font-size: 3rem;
+      font-size: clamp(1.8rem, 8vw, 3rem);
       font-weight: 500;
       letter-spacing: 8px;
       color: #f3e7c4;
@@ -108,7 +108,7 @@
     }
 
     .sub {
-      font-size: 1.2rem;
+      font-size: clamp(0.9rem, 4vw, 1.2rem);
       letter-spacing: 1px;
       color: #d4af37;
       font-style: italic;
@@ -117,7 +117,7 @@
 
     .hero p {
       margin: 1vh 0;
-      font-size: 1rem;
+      font-size: clamp(0.9rem, 4vw, 1.2rem);
       color: #ccc8b8;
     }
 
@@ -137,7 +137,7 @@
       font-weight: 400;
       backdrop-filter: blur(4px);
       transition: all 0.3s;
-      font-size: 0.9rem;
+      font-size: clamp(0.75rem, 2.8vw, 0.9rem);
     }
 
     .btn-map:hover {
@@ -148,7 +148,7 @@
 
     .scroll-hint {
       margin-top: 30px;
-      font-size: 0.8rem;
+      font-size: clamp(0.75rem, 2.8vw, 0.9rem);
       opacity: 0.5;
       letter-spacing: 1px;
     }
@@ -165,7 +165,7 @@
     }
 
     .card h2 {
-      font-size: 1.7rem;
+      font-size: clamp(1.3rem, 5vw, 1.8rem);
       font-weight: 400;
       color: #d4af37;
       margin-bottom: 18px;
@@ -176,7 +176,7 @@
     }
 
     .intro-text p {
-      font-size: 0.95rem;
+      font-size: clamp(0.85rem, 3.5vw, 1rem);
       margin: 10px 0;
       color: #d3cfbc;
       text-align: justify;
@@ -227,11 +227,11 @@
       margin-top: 8px;
       font-weight: 500;
       color: #f3e3b0;
-      font-size: 1rem;
+      font-size: clamp(0.8rem, 3vw, 1rem);
     }
 
     .role-tag {
-      font-size: 0.7rem;
+      font-size: clamp(0.6rem, 2.5vw, 0.7rem);
       background: #d4af37;
       color: #0f0f0f;
       padding: 2px 12px;
@@ -241,7 +241,7 @@
     }
 
     .half-title {
-      font-size: 1.2rem;
+      font-size: clamp(1rem, 4vw, 1.2rem);
       color: #d4af37;
       margin: 18px 0 12px;
       text-align: left;
@@ -254,7 +254,7 @@
       justify-content: space-between;
       border-bottom: 1px dotted rgba(255,255,200,0.2);
       padding: 10px 4px;
-      font-size: 0.85rem;
+      font-size: clamp(0.75rem, 2.8vw, 0.9rem);
       color: #ddd8c4;
     }
 
@@ -276,7 +276,7 @@
     footer {
       margin-top: 20px;
       color: #ab9f7a;
-      font-size: 0.75rem;
+      font-size: clamp(0.75rem, 2.8vw, 0.9rem);
     }
 
     /* 弹窗 */
@@ -314,7 +314,7 @@
 
     .modal-content h3 {
       color: #d4af37;
-      font-size: 1.5rem;
+      font-size: clamp(1.2rem, 5vw, 1.5rem);
       text-indent: 0;        /* 取消缩进 */
       text-align: center;    /* 居中 */
       margin-bottom: 4px;
@@ -342,6 +342,7 @@
       padding: 8px 28px;
       border-radius: 30px;
       cursor: pointer;
+      font-size: clamp(0.85rem, 2.5vw, 1rem);
     }
 
     .modal-content p {
@@ -364,7 +365,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
+  font-size: clamp(1.2rem, 4vw, 1.4rem);
   z-index: 999;
   box-shadow: 0 4px 18px black;
   cursor: pointer;
@@ -387,7 +388,7 @@
     /* 适配小屏幕 */
     @media (max-width: 400px) {
       .hero h1 {
-        font-size: 2.5rem;
+        font-size: clamp(1.8rem, 7vw, 2.5rem)
       }
     }
   </style>
