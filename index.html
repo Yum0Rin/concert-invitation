@@ -788,15 +788,14 @@
     }
     });
 
-    // 跳转到节目单（第7页）
+    // 跳转到节目单
     const gotoBtn = document.getElementById('gotoProgramBtn');
     if (gotoBtn) {
     gotoBtn.addEventListener('click', function() {
         const container = document.getElementById('swipeContainer');
         const pages = document.querySelectorAll('.page');
-        // 第8页索引是7
-        if (pages[7]) {
-        pages[7].scrollIntoView({ behavior: 'smooth' });
+        if (pages[11]) {
+        pages[11].scrollIntoView({ behavior: 'smooth' });
         }
     });
     }
