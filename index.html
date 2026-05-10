@@ -28,36 +28,64 @@
       margin: 0;
     }
 
-    /* 滑动容器 ———— 仿全屏滑屏翻页 (卡片式渐变翻页) */
+    /* 滑动容器 ———— 统一背景，不再有页面间的色差 */
     .swipe-container {
-      width: 100%;
-      height: 100vh;
-      overflow-y: scroll;
-      scroll-snap-type: y mandatory;
-      scroll-behavior: smooth;
-      position: relative;
-      background: #0a0c10;
+        width: 100%;
+        height: 100vh;
+        overflow-y: scroll;
+        scroll-snap-type: y mandatory;
+        scroll-behavior: smooth;
+        position: relative;
+        /* 整体渐变背景只在这里设置一次 */
+        background: radial-gradient(#0a1420);
     }
 
     /* 每一页单独设立，滚动强制对齐 + 渐入渐现动画 */
     .page {
-      scroll-snap-align: start;
-      width: 100%;
-      aspect-ratio: 9 / 16;          /* 宽9高16 */
-      max-height: 100vh;          /* 防止超出屏幕 */
-      margin: 0 auto;
-      padding: 10vh 5vw 10vh 5vw; 
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      position: relative;
-      backdrop-filter: blur(0px);
-      background: radial-gradient(circle at 10% 20%, rgba(20, 35, 55, 0.85), rgba(8, 20, 35, 0.95));
-      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-      animation: pageFadeIn 1.5s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
-      opacity: 0;
-      transform: translateY(15px);
-      scroll-snap-align: start;      /* 保持对齐 */
+        scroll-snap-align: start;
+        width: 100%;
+        aspect-ratio: 9 / 16;
+        max-height: 100vh;
+        margin: 0 auto;
+        padding: 10vh 5vw 10vh 5vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        background: transparent;  /* 👈 完全透明，不产生自己的背景 */
+        /* 删除原来的 border-bottom，避免分界线 */
+        border-bottom: none;
+        animation: pageFadeIn 1.5s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    img {
+      pointer-events: none;
+      -webkit-touch-callout: none;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* 舞台光束层 */
+    .stage-beam {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 85%;
+        height: 65%;
+        background: radial-gradient(ellipse at center top, 
+            rgba(255, 235, 170, 0.45) 0%,      /* 最亮点：暖金色 */
+            rgba(255, 210, 120, 0.28) 15%,
+            rgba(255, 190, 90, 0.16) 30%,
+            rgba(212, 175, 55, 0.08) 50%,
+            transparent 75%                     /* 完全透明发散 */
+        );
+        pointer-events: none;   /* 让光束不干扰按钮点击 */
+        z-index: 0;             /* 放在最底层，hero 在上面 */
+        border-radius: 0;       /* 无圆角，自然发散 */
     }
 
     /* 页面入场动画 */
@@ -87,6 +115,8 @@
 
     /* 封面区域 */
     .hero {
+      position: relative;
+      z-index: 1;
       text-align: center;
       padding: 30px 10px 20px;
       background: radial-gradient(circle at top, #2a2d3a, #0f1117);
@@ -147,7 +177,7 @@
     }
 
     .scroll-hint {
-      margin-top: 30px;
+      margin-top: 4vh;
       font-size: clamp(0.75rem, 2.8vw, 0.9rem);
       opacity: 0.5;
       letter-spacing: 1px;
@@ -258,19 +288,86 @@
       color: #ddd8c4;
     }
 
-    .gallery {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 8px;
+        /* 横向滑动画廊 */
+    .gallery-scroll {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      cursor: grab;
+      border-radius: 3vw;
+      position: relative;
+      display: flex;
     }
 
-    .gallery img {
-        width: 100%;
-        aspect-ratio: 4 / 3;
-        object-fit: cover;
-        border-radius: 3vw;
-        border: 1px solid #d4af37;
+    .gallery-scroll:active {
+      cursor: grabbing;
+    }
+
+    .gallery-scroll::-webkit-scrollbar {
+      height: 0;
+      display: none;
+    }
+
+    .gallery-padding-left,
+    .gallery-padding-right {
+      flex: 0 0 9%;
+      scroll-snap-align: none;
+      pointer-events: none;
+    }
+
+    .gallery-track {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+    }
+
+    .gallery-slide {
+      flex: 0 0 70%;
+      scroll-snap-align: center;
+      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.5s ease;
+      transform: scale(0.88);
+      opacity: 0.55;
+      filter: brightness(0.7);
+    }
+
+    .gallery-slide.active-slide {
+      transform: scale(1);
+      opacity: 1;
+      filter: brightness(1);
+      z-index: 2;
+    }
+
+    .gallery-slide img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border-radius: 3vw;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+    }
+
+    /* 指示器圆点 */
+    .gallery-dots {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .gallery-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(212, 175, 55, 0.25);
+      transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      cursor: pointer;
+    }
+
+    .gallery-dot.active {
+      background: #d4af37;
+      width: 22px;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
     }
 
     footer {
@@ -352,38 +449,38 @@
     line-height: 1.6;
 }
 
-/* 音乐按钮 */
-.music-float {
-  position: fixed;
-  bottom: 28px;
-  right: 20px;
-  background: #1e2029;
-  border: 1px solid #d4af37;
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: clamp(1.2rem, 4vw, 1.4rem);
-  z-index: 999;
-  box-shadow: 0 4px 18px black;
-  cursor: pointer;
-  backdrop-filter: blur(8px);
-  transition: 0.2s;
-}
-.music-float:hover {
-  transform: scale(1.05);
-  border-color: #f0d97a;
-}
-.music-float.playing {
-  box-shadow: 0 0 12px #d4af37;
-  animation: musicPulse 1.2s ease-in-out infinite;
-}
-@keyframes musicPulse {
-  0%, 100% { box-shadow: 0 0 5px #d4af37; }
-  50% { box-shadow: 0 0 15px #f0d97a, 0 0 5px #d4af37; }
-}
+    /* 音乐按钮 */
+    .music-float {
+    position: fixed;
+    bottom: 28px;
+    right: 20px;
+    background: #1e2029;
+    border: 1px solid #d4af37;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(1.2rem, 4vw, 1.4rem);
+    z-index: 999;
+    box-shadow: 0 4px 18px black;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: 0.2s;
+    }
+    .music-float:hover {
+    transform: scale(1.05);
+    border-color: #f0d97a;
+    }
+    .music-float.playing {
+    box-shadow: 0 0 12px #d4af37;
+    animation: musicPulse 1.2s ease-in-out infinite;
+    }
+    @keyframes musicPulse {
+    0%, 100% { box-shadow: 0 0 5px #d4af37; }
+    50% { box-shadow: 0 0 15px #f0d97a, 0 0 5px #d4af37; }
+    }
 
     /* 适配小屏幕 */
     @media (max-width: 400px) {
@@ -391,23 +488,40 @@
         font-size: clamp(1.8rem, 7vw, 2.5rem)
       }
     }
+
+    /* 声部大弹窗的成员网格滚动条美化 */
+    #sectionMembersGrid::-webkit-scrollbar {
+    width: 4px;
+    }
+
+    #sectionMembersGrid::-webkit-scrollbar-track {
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: 2px;
+    }
+
+    #sectionMembersGrid::-webkit-scrollbar-thumb {
+    background: #d4af37;
+    border-radius: 2px;
+    }
+
   </style>
 </head>
 <body>
   <div class="swipe-container" id="swipeContainer">
     <!-- 页面1：封面页 -->
     <div class="page" id="page1">
+      <div class="stage-beam"></div>
       <div class="hero fade-up">
         <h1>合唱音乐会</h1>
         <div class="sub">“声生不息，星火长明”</div>
         <div class="sub">校团委“红星”艺术团声歌队合唱专场</div>
-        <p>2026/05/31 18:00</p>
-        <p>江西财经大学麦庐园校区 萃庐音乐厅</p>
-        <div style="display: flex; gap: 16px; justify-content: center; margin-top: 18px;">
-  <a href="https://uri.amap.com/marker?position=115.813806,28.72668&name=萃庐音乐厅" class="btn-map" target="_blank">&ensp;点击导航&ensp;</a>
-  <a href="javascript:void(0);" class="btn-map" id="gotoProgramBtn">直达节目单</a>
+        <p style="margin-bottom: 0.25rem;">2026/05/31 18:00</p>
+<p style="margin-bottom: 1rem;">江西财经大学麦庐园校区 萃庐音乐厅</p>
+<div style="display: flex; gap: 1.2rem; justify-content: center; margin: 0.3rem 0 1.5rem 0;">
+    <a href="https://uri.amap.com/marker?position=115.813806,28.72668&name=萃庐音乐厅" class="btn-map" target="_blank">&ensp;点击导航&ensp;</a>
+    <a href="javascript:void(0);" class="btn-map" id="gotoProgramBtn">直达节目单</a>
 </div>
-        <p class="scroll-hint">——— 向下滑动浏览完整邀请函 ———</p>
+<p class="scroll-hint" style="margin-top: 0;">——— 向下滑动浏览完整邀请函 ———</p>
       </div>
     </div>
 
@@ -425,125 +539,185 @@
       </div>
     </div>
 
-<!-- 页面3：指挥 -->
-<div class="page" id="page3">
-  <div class="card fade-up" style="text-align: center;">
-    <h2>🎵 指挥</h2>
-    <div style="display: flex; flex-direction: column; align-items: center; margin-top: 16px;">
-      <div class="person-item" onclick='showDetail("指挥", "刘子铉", "刘子铉，中共党员，本硕毕业于江西财经大学艺术学院音乐系。现任南昌理工学院音乐学院专任声乐教师，江西财经大学 \"红星\" 艺术团声歌队常任合唱指挥。曾多次参加合唱指挥类大师班进行学习。\n&emsp;&emsp;曾指导江西财经大学 \"红星\" 艺术团声歌队获江西省大学生第十一届艺术展演合唱本科甲组二等奖，连续两年获江西省大中小学合唱比赛大学生甲组一等奖、优秀指挥奖；指导经济学院、国贸学院荣获江西财经大学一二·九合唱比赛一等奖、最佳指挥奖；指导江西财经大学团委合唱代表队获 \"青春心向党、奋斗新征程\" 江西省各界青年庆祝中国共产党成立100周年歌咏大赛高校组二等奖；指导墩子塘街道办获南昌市东湖区庆祝中国共产党成立100周年群众歌咏比赛二等奖；曾获江西省第十届大学生艺术展演活动本科院校乙组声乐类一等奖、江西省第十五届 \"德艺双馨\" 通俗类成年A组金奖。")'>
-        <img src="刘子铉.png" alt="刘子铉" style="width: auto; max-width: 70vw; height: auto; object-fit: contain; border-radius: 5vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
-        <div class="person-name" style="font-size: 1.3rem; margin-top: 16px;">刘子铉</div>
-      </div>
+    <!-- 页面3：指挥 -->
+    <div class="page" id="page3">
+    <div class="card fade-up" style="text-align: center;">
+        <h2>🎵 指挥</h2>
+        <div style="display: flex; flex-direction: column; align-items: center; margin-top: 16px;">
+        <div class="person-item" onclick='showDetail("指挥", "刘子铉", "刘子铉，中共党员，本硕毕业于江西财经大学艺术学院音乐系。现任南昌理工学院音乐学院专任声乐教师，江西财经大学 \"红星\" 艺术团声歌队常任合唱指挥。曾多次参加合唱指挥类大师班进行学习。\n&emsp;&emsp;曾指导江西财经大学 \"红星\" 艺术团声歌队获江西省大学生第十一届艺术展演合唱本科甲组二等奖，连续两年获江西省大中小学合唱比赛大学生甲组一等奖、优秀指挥奖；指导经济学院、国贸学院荣获江西财经大学一二·九合唱比赛一等奖、最佳指挥奖；指导江西财经大学团委合唱代表队获 \"青春心向党、奋斗新征程\" 江西省各界青年庆祝中国共产党成立100周年歌咏大赛高校组二等奖；指导墩子塘街道办获南昌市东湖区庆祝中国共产党成立100周年群众歌咏比赛二等奖；曾获江西省第十届大学生艺术展演活动本科院校乙组声乐类一等奖、江西省第十五届 \"德艺双馨\" 通俗类成年A组金奖。")'>
+            <img src="刘子铉.png" alt="刘子铉" style="width: auto; max-width: 70vw; height: auto; object-fit: contain; border-radius: 5vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
+            <div class="person-name" style="font-size: 1.3rem; margin-top: 16px;">刘子铉</div>
+        </div>
+        </div>
     </div>
-  </div>
-</div>
-
-<!-- 页面4：艺术指导 -->
-<div class="page" id="page4">
-  <div class="card fade-up">
-    <h2>🎹 艺术指导</h2>
-    <div class="person-grid">
-      <div class="person-item" onclick="showDetail('艺术指导', '王雅晴', '钢琴演奏硕士，多次担任声乐赛事的艺术指导。她擅长与合唱团呼吸相融，音乐温暖且充满张力。')">
-        <img src="https://picsum.photos/id/20/200/200" class="person-img" alt="王雅晴">
-        <div class="person-name">王雅晴</div>
-      </div>
-      <div class="person-item" onclick="showDetail('艺术指导', '李明浩', '旅美合作钢琴家，专注声乐艺术指导，他的键盘色彩丰富，广受好评。')">
-        <img src="https://picsum.photos/id/64/200/200" class="person-img" alt="李明浩">
-        <div class="person-name">李明浩</div>
-      </div>
     </div>
-  </div>
-</div>
 
-    <!-- 页面4：主持人 -->
+    <!-- 页面4：艺术指导 -->
     <div class="page" id="page4">
-      <div class="card fade-up">
-        <h2>🎤 主持人</h2>
-        <div class="person-grid">
-          <div class="person-item" onclick="showDetail('主持人', '陈思羽', '校主持人队队长，风格端庄大气，多次主持省级文艺汇演。')">
-            <img src="https://picsum.photos/id/26/200/200" class="person-img" alt="陈思羽">
-            <div class="person-name">陈思羽</div>
-          </div>
-          <div class="person-item" onclick="showDetail('主持人', '张景轩', '播音主持专业，声音醇厚，善于带动现场气氛。')">
-            <img src="https://picsum.photos/id/36/200/200" class="person-img" alt="张景轩">
-            <div class="person-name">张景轩</div>
-          </div>
+    <div class="card fade-up">
+        <h2>🎹 艺术指导</h2>
+        <div style="display: flex; justify-content: center; align-items: flex-start; gap: 4vw; margin-top: 16px;">
+        <div class="person-item" onclick="showDetail('艺术指导', '王雅晴', '钢琴演奏硕士，多次担任声乐赛事的艺术指导。她擅长与合唱团呼吸相融，音乐温暖且充满张力。')" style="flex: 1; max-width: 38vw;">
+            <img src="https://picsum.photos/id/20/200/200" alt="王雅晴" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
+            <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">王雅晴</div>
         </div>
-      </div>
+        <div class="person-item" onclick="showDetail('艺术指导', '李明浩', '旅美合作钢琴家，专注声乐艺术指导，他的键盘色彩丰富，广受好评。')" style="flex: 1; max-width: 38vw;">
+            <img src="https://picsum.photos/id/64/200/200" alt="李明浩" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
+            <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">李明浩</div>
+        </div>
+        </div>
+    </div>
     </div>
 
-    <!-- 页面5：特邀嘉宾 -->
+    <!-- 页面5：主持人 -->
     <div class="page" id="page5">
-      <div class="card fade-up">
-        <h2>⭐ 特邀嘉宾</h2>
-        <div class="person-grid">
-          <div class="person-item" onclick="showDetail('特邀嘉宾', '杨茜雯', '青年女高音，曾获中国音乐金钟奖江西赛区银奖。')">
-            <img src="https://picsum.photos/id/29/200/200" class="person-img" alt="杨茜雯">
-            <div class="person-name">杨茜雯</div>
-            <div class="role-tag">小提琴</div>
-          </div>
-          <div class="person-item" onclick="showDetail('特邀嘉宾', '李宗瀚', '男中音，硕士毕业于武汉音乐学院，演唱富有感染力。')">
-            <img src="https://picsum.photos/id/91/200/200" class="person-img" alt="李宗瀚">
-            <div class="person-name">李宗瀚</div>
-            <div class="role-tag">琵 琶</div>
-          </div>
+    <div class="card fade-up">
+        <h2>🎤 主持人</h2>
+        <div style="display: flex; justify-content: center; align-items: flex-start; gap: 4vw; margin-top: 16px;">
+        <div class="person-item" onclick="showDetail('主持人', '陈思羽', '校主持人队队长，风格端庄大气，多次主持省级文艺汇演。')" style="flex: 1; max-width: 38vw;">
+            <img src="https://picsum.photos/id/26/200/200" alt="陈思羽" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
+            <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">陈思羽</div>
         </div>
-      </div>
+        <div class="person-item" onclick="showDetail('主持人', '张景轩', '播音主持专业，声音醇厚，善于带动现场气氛。')" style="flex: 1; max-width: 38vw;">
+            <img src="https://picsum.photos/id/36/200/200" alt="张景轩" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
+            <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">张景轩</div>
+        </div>
+        </div>
+    </div>
     </div>
 
-    <!-- 页面6：合唱团介绍 + 合照 -->
+    <!-- 页面6：特邀嘉宾 -->
     <div class="page" id="page6">
-      <div class="card fade-up">
-        <h2>🌟 声歌队 · 合唱团</h2>
-        <img src="https://picsum.photos/id/98/600/300" class="group-photo" alt="声歌队合照">
-        <p style="margin-top:14px;">江西财经大学“红星”艺术团声歌队，现有团员六十余人，来自各院系热爱合唱的学子。多次获得江西省大学生艺术展演一等奖，秉承“以美育人，以声传情”。</p>
-      </div>
-    </div>
-
-<!-- 页面7：上半场节目单 -->
-<div class="page" id="page7">
-  <div class="card fade-up">
-    <h2>节目单</h2>
-    <div style="color: #d4af37; font-size: 0.9rem; letter-spacing: 2px; margin: 8px 0 14px 0; text-align: center;">—— 上半场 ——</div>
-    <div class="song-item"><span>《城南送别》</span><span>词:李叔同 曲:周鑫泉</span></div>
-    <div class="song-item"><span>《大鱼》</span><span>词:尹约 曲:钱雷</span></div>
-    <div class="song-item"><span>《如果明天就是下一生》</span><span>词:张卉湄 曲:石青如</span></div>
-    <div class="song-item"><span>《我喜欢》</span><span>词曲:金承志</span></div>
-    <div class="song-item"><span>《Mon Coeur se recommande à vous》</span><span>曲:Orlando di Lasso</span></div>
-    <div class="song-item"><span>《灯火里的中国》</span><span>词:田地 曲:舒楠</span></div>
-    <div style="margin-top: 14px; color: #d4af37; font-weight: 500;">⭐ AI好能编。</div>
-  </div>
-</div>
-
-<!-- 页面8：下半场节目单 -->
-<div class="page" id="page8">
-  <div class="card fade-up">
-    <h2>节目单</h2>
-    <div style="color: #d4af37; font-size: 0.9rem; letter-spacing: 2px; margin: 8px 0 14px 0; text-align: center;">—— 下半场 ——</div>
-    <div class="song-item"><span>《星辰大海》</span><span>词:王平久 曲:常石磊</span></div>
-    <div class="song-item"><span>《追寻》</span><span>词:张和平 曲:舒楠</span></div>
-    <div class="song-item"><span>《声部介绍歌》</span><span>改编合唱</span></div>
-    <div class="song-item"><span>《Nella Fantasia》</span><span>曲:Ennio Morricone</span></div>
-    <div class="song-item"><span>《故乡的云》</span><span>词:小轩 曲:谭健常</span></div>
-    <div class="song-item"><span>《友谊地久天长》</span><span>苏格兰民歌</span></div>
-  </div>
-</div>
-
-    <!-- 页面8：风采展示 -->
-    <div class="page" id="page8">
-      <div class="card fade-up">
-        <h2>📸 声歌队·精彩瞬间</h2>
-        <div class="gallery">
-          <img src="https://picsum.photos/id/93/200/200" alt="瞬间1">
-          <img src="https://picsum.photos/id/94/200/200" alt="瞬间2">
-          <img src="https://picsum.photos/id/95/200/200" alt="瞬间3">
-          <img src="https://picsum.photos/id/97/200/200" alt="瞬间4">
+    <div class="card fade-up">
+        <h2>⭐ 特邀嘉宾</h2>
+        <div style="display: flex; justify-content: center; align-items: flex-start; gap: 4vw; margin-top: 16px;">
+        <div class="person-item" onclick="showDetail('特邀嘉宾', '杨茜雯', '青年女高音，曾获中国音乐金钟奖江西赛区银奖。')" style="flex: 1; max-width: 38vw;">
+            <img src="https://picsum.photos/id/29/200/200" alt="杨茜雯" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
+            <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">杨茜雯</div>
+            <div class="role-tag">小提琴</div>
         </div>
+        <div class="person-item" onclick="showDetail('特邀嘉宾', '李宗瀚', '男中音，硕士毕业于武汉音乐学院，演唱富有感染力。')" style="flex: 1; max-width: 38vw;">
+            <img src="https://picsum.photos/id/91/200/200" alt="李宗瀚" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
+            <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">李宗瀚</div>
+            <div class="role-tag">&ensp;琵琶&ensp;</div>
+        </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- 页面7：合唱团介绍 -->
+    <div class="page" id="page7">
+    <div class="card fade-up" style="text-align: center;">
+        <h2>🌟 声歌队 · 合唱团</h2>
+        <div class="person-item" onclick="showDetail('合唱团', '红星艺术团声歌队', '江西财经大学\u201C红星\u201D艺术团声歌队，隶属于校艺术团，由来自学校各个年级不同专业的热爱音乐的学生组成。他们以动人的旋律、和谐的音色和精准的音高，呈现出深情的合唱作品。\n&emsp;&emsp;曾获全国第六届大学生艺术展国家级三等奖，江西省第二届、第三届大中小学生合唱比赛大学生甲组一等奖、江西省大学生第十一届艺术展演省级二等奖、江西省大学生第十届艺术展演省级二等奖、江西省大学生第九届艺术展演省级三等奖，江西省\u201C长征组歌\u201D合唱比赛三等奖等多项艺术类奖项。')">
+        <img src="https://picsum.photos/id/98/600/300" alt="声歌队合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
+        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">江西财经大学"红星"艺术团声歌队，现有团员六十余人，来自各院系热爱合唱的学子。多次获得江西省大学生艺术展演一等奖，秉承"以美育人，以声传情"。</p>
+        </div>
+    </div>
+    </div>
+
+    <!-- 页面8：女高音声部 Soprano -->
+    <div class="page" id="page8">
+    <div class="card fade-up" style="text-align: center;">
+        <h2>🎵 女高音声部</h2>
+        <div class="person-item" onclick="openSectionDetail('S', '女高音声部', '女高音是合唱中最高、最明亮的声部，如同星空中的北极星。她们用清澈透亮的音色，唱出旋律的灵魂。')">
+        <img src="soprano_group.jpg" alt="女高音声部合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
+        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">女高音声部，合唱中最高的声部，担任主旋律的演绎。音色明亮、清澈，如星空中的北极星。</p>
+        </div>
+    </div>
+    </div>
+
+    <!-- 页面9：女中音声部 Alto -->
+    <div class="page" id="page9">
+    <div class="card fade-up" style="text-align: center;">
+        <h2>🎵 女中音声部</h2>
+        <div class="person-item" onclick="openSectionDetail('A', '女中音声部', '女中音是合唱中温暖的中声部，如同大地般沉稳包容。她们用醇厚的音色填充和声的肌理。')">
+        <img src="alto_group.jpg" alt="女中音声部合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
+        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">女中音声部，合唱中的中声部，为和声提供温暖支撑。音色醇厚、柔美，如大地般包容。</p>
+        </div>
+    </div>
+    </div>
+
+    <!-- 页面10：男高音声部 Tenor -->
+    <div class="page" id="page10">
+    <div class="card fade-up" style="text-align: center;">
+        <h2>🎵 男高音声部</h2>
+        <div class="person-item" onclick="openSectionDetail('T', '男高音声部', '男高音是合唱中充满力量的高声部，如同破晓的晨光。他们用富有穿透力的音色，赋予音乐激情与张力。')">
+        <img src="tenor_group.jpg" alt="男高音声部合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
+        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">男高音声部，合唱中充满力量的高声部。音色富有穿透力，如同破晓的晨光。</p>
+        </div>
+    </div>
+    </div>
+
+    <!-- 页面11：男低音声部 Bass -->
+    <div class="page" id="page11">
+    <div class="card fade-up" style="text-align: center;">
+        <h2>🎵 男低音声部</h2>
+        <div class="person-item" onclick="openSectionDetail('B', '男低音声部', '男低音是合唱中最深沉、最浑厚的声部，如同大地的心跳。他们用深厚的音色为合唱奠定坚实的基础。')">
+        <img src="bass_group.jpg" alt="男低音声部合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
+        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">男低音声部，合唱中最深沉浑厚的声部。音色宽广、深厚，如同大地的心跳。</p>
+        </div>
+    </div>
+    </div>
+
+    <!-- 页面12：上半场节目单 -->
+    <div class="page" id="page12">
+    <div class="card fade-up">
+        <h2>节目单</h2>
+        <div style="color: #d4af37; font-size: 0.9rem; letter-spacing: 2px; margin: 8px 0 14px 0; text-align: center;">—— 上半场 ——</div>
+        <div class="song-item"><span>《城南送别》</span><span>词:李叔同 曲:周鑫泉</span></div>
+        <div class="song-item"><span>《大鱼》</span><span>词:尹约 曲:钱雷</span></div>
+        <div class="song-item"><span>《如果明天就是下一生》</span><span>词:张卉湄 曲:石青如</span></div>
+        <div class="song-item"><span>《我喜欢》</span><span>词曲:金承志</span></div>
+        <div class="song-item"><span>《Mon Coeur se recommande à vous》</span><span>曲:Orlando di Lasso</span></div>
+        <div class="song-item"><span>《灯火里的中国》</span><span>词:田地 曲:舒楠</span></div>
+        <div style="margin-top: 14px; color: #d4af37; font-weight: 500;">⭐ AI好能编。</div>
+    </div>
+    </div>
+
+    <!-- 页面13：下半场节目单 -->
+    <div class="page" id="page13">
+    <div class="card fade-up">
+        <h2>节目单</h2>
+        <div style="color: #d4af37; font-size: 0.9rem; letter-spacing: 2px; margin: 8px 0 14px 0; text-align: center;">—— 下半场 ——</div>
+        <div class="song-item"><span>《星辰大海》</span><span>词:王平久 曲:常石磊</span></div>
+        <div class="song-item"><span>《追寻》</span><span>词:张和平 曲:舒楠</span></div>
+        <div class="song-item"><span>《声部介绍歌》</span><span>改编合唱</span></div>
+        <div class="song-item"><span>《Nella Fantasia》</span><span>曲:Ennio Morricone</span></div>
+        <div class="song-item"><span>《故乡的云》</span><span>词:小轩 曲:谭健常</span></div>
+        <div class="song-item"><span>《友谊地久天长》</span><span>苏格兰民歌</span></div>
+    </div>
+    </div>
+
+        <!-- 页面14：风采展示 -->
+    <div class="page" id="page14">
+      <div class="card fade-up" style="padding: 4vh 2vw;">
+        <h2>📸 声歌队·精彩瞬间</h2>
+        <div class="gallery-scroll" id="galleryScroll">
+          <div class="gallery-track" id="galleryTrack">
+            <div class="gallery-slide">
+              <img src="https://picsum.photos/id/93/600/450" alt="瞬间1">
+            </div>
+            <div class="gallery-slide">
+              <img src="https://picsum.photos/id/94/600/450" alt="瞬间2">
+            </div>
+            <div class="gallery-slide">
+              <img src="https://picsum.photos/id/95/600/450" alt="瞬间3">
+            </div>
+            <div class="gallery-slide">
+              <img src="https://picsum.photos/id/97/600/450" alt="瞬间4">
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 16px;">
+          <div class="gallery-dots" id="galleryDots"></div>
+        </div>
+        <p style="text-align: center; color: #ab9f7a; font-size: clamp(0.7rem, 2.5vw, 0.8rem); margin-top: 12px;">← 左右滑动查看 →</p>
       </div>
     </div>
 
-    <!-- 页面9：致谢 -->
-    <div class="page" id="page9">
+    <!-- 页面15：致谢 -->
+    <div class="page" id="page15">
       <div class="card fade-up" style="text-align: center;">
         <h2>❤️ 致谢</h2>
         <p>感谢所有为声歌队付出的小伙伴们，感谢指挥与艺术指导，感谢学校团委的支持。</p>
@@ -551,6 +725,19 @@
         <footer>江西财经大学“红星”艺术团声歌队 敬邀</footer>
       </div>
     </div>
+
+        <!-- 声部成员大弹窗 -->
+    <div id="sectionModal" class="modal modal-hidden" onclick="closeSectionModal()">
+    <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 90vw; max-height: 85vh; width: 90vw; padding: 3vh 4vw;">
+        <h3 id="sectionModalTitle" style="color: #d4af37; font-size: clamp(1.2rem, 5vw, 1.5rem); margin-bottom: 8px;"></h3>
+        <p id="sectionModalDesc" style="color: #ccc8b8; font-size: clamp(0.8rem, 3vw, 0.9rem); margin-bottom: 20px; text-align: center; text-indent: 0;"></p>
+        <div id="sectionMembersGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-height: 55vh; overflow-y: auto; padding: 8px;">
+        <!-- 动态生成成员列表 -->
+        </div>
+        <button onclick="closeSectionModal()" style="margin-top: 16px;">关闭</button>
+    </div>
+    </div>
+
   </div>
 
   <!-- 弹窗 -->
@@ -614,6 +801,97 @@
     });
     }
 
+    // 声部成员数据（示例，请替换为实际数据）
+    const sectionMembers = {
+    'S': [
+        { name: '张馨月', img: 'soprano_01.jpg', intro: '我是张馨月，来自会计学院。热爱音乐，享受在合唱中找到共鸣的感觉。' },
+        { name: '李雨桐', img: 'soprano_02.jpg', intro: '我是李雨桐，金融学院大三学生。音乐是我生活中不可或缺的一部分。' },
+        { name: '王梦涵', img: 'soprano_03.jpg', intro: '我是王梦涵，来自法学院。在合唱中学会了倾听与配合。' },
+        { name: '赵思琪', img: 'soprano_04.jpg', intro: '我是赵思琪，国贸学院。女高音的旋律让我感受到飞翔的自由。' },
+        { name: '陈晓雯', img: 'soprano_05.jpg', intro: '我是陈晓雯，艺术学院。用歌声传递情感是我的追求。' },
+        { name: '刘诗雨', img: 'soprano_06.jpg', intro: '我是刘诗雨，统计学院。合唱教会我团队合作的重要性。' },
+        { name: '周芷若', img: 'soprano_07.jpg', intro: '我是周芷若，外语学院。音乐无国界，合唱让我们心灵相通。' },
+        { name: '吴雨霏', img: 'soprano_08.jpg', intro: '我是吴雨霏，经济学院。每一次排练都是心灵的洗礼。' },
+        { name: '郑雅文', img: 'soprano_09.jpg', intro: '我是郑雅文，工商管理学院。合唱让我找到归属感。' },
+        // 继续添加更多成员...
+    ],
+    'A': [
+        { name: '杨柳青', img: 'alto_01.jpg', intro: '我是杨柳青，人文学院。女中音的厚重感让我着迷。' },
+        { name: '林晓芳', img: 'alto_02.jpg', intro: '我是林晓芳，财税学院。在和声中找到自己的位置很重要。' },
+        { name: '黄诗涵', img: 'alto_03.jpg', intro: '我是黄诗涵，国际学院。音乐让我的大学生活更加丰富多彩。' },
+        { name: '孙雅婷', img: 'alto_04.jpg', intro: '我是孙雅婷，软件学院。理工科女生也有一颗文艺的心。' },
+        { name: '马丽娜', img: 'alto_05.jpg', intro: '我是马丽娜，旅游学院。合唱让我学会了坚持与热爱。' },
+        { name: '朱晓琳', img: 'alto_06.jpg', intro: '我是朱晓琳，体育学院。音乐的节奏与运动的韵律相通。' },
+        { name: '胡佳怡', img: 'alto_07.jpg', intro: '我是胡佳怡，新闻学院。用笔记录生活，用歌声表达情感。' },
+        { name: '高雅楠', img: 'alto_08.jpg', intro: '我是高雅楠，数学学院。数字与音符都是宇宙的语言。' },
+        { name: '罗敏华', img: 'alto_09.jpg', intro: '我是罗敏华，公管学院。合唱团是我大学最温暖的港湾。' },
+        // 继续添加...
+    ],
+    'T': [
+        { name: '陈浩宇', img: 'tenor_01.jpg', intro: '我是陈浩宇，信管学院。男高音的力量感让我热血沸腾。' },
+        { name: '张伟杰', img: 'tenor_02.jpg', intro: '我是张伟杰，物流学院。在合唱中释放压力、找到快乐。' },
+        { name: '李俊峰', img: 'tenor_03.jpg', intro: '我是李俊峰，工程学院。音乐是工程之外的另一种创造。' },
+        { name: '刘明哲', img: 'tenor_04.jpg', intro: '我是刘明哲，法学院。严谨的法律之外，音乐让我柔软。' },
+        { name: '王子豪', img: 'tenor_05.jpg', intro: '我是王子豪，国贸学院。高音是我的骄傲，合唱是我的热爱。' },
+        { name: '杨凯文', img: 'tenor_06.jpg', intro: '我是杨凯文，金融学院。用歌声点亮青春。' },
+        { name: '赵天宇', img: 'tenor_07.jpg', intro: '我是赵天宇，会计学院。数字之外，音乐是我的解药。' },
+        { name: '吴浩然', img: 'tenor_08.jpg', intro: '我是吴浩然，经济学院。合唱让我懂得个体与整体的和谐。' },
+        { name: '黄志远', img: 'tenor_09.jpg', intro: '我是黄志远，统计学院。数据与旋律，理性与感性的融合。' },
+        // 继续添加...
+    ],
+    'B': [
+        { name: '郑海龙', img: 'bass_01.jpg', intro: '我是郑海龙，艺术学院。男低音的厚重是合唱的基石。' },
+        { name: '林志豪', img: 'bass_02.jpg', intro: '我是林志豪，体育学院。低音炮的称号让我自豪。' },
+        { name: '陈国栋', img: 'bass_03.jpg', intro: '我是陈国栋，建筑学院。建筑是凝固的音乐，音乐是流动的建筑。' },
+        { name: '张永强', img: 'bass_04.jpg', intro: '我是张永强，机电学院。机械之外，音乐是我内心的柔软。' },
+        { name: '李大山', img: 'bass_05.jpg', intro: '我是李大山，农学院。土地与歌声，都让人踏实。' },
+        { name: '王铁柱', img: 'bass_06.jpg', intro: '我是王铁柱，材料学院。最硬的专业，最深的低音。' },
+        { name: '赵大海', img: 'bass_07.jpg', intro: '我是赵大海，海洋学院。像大海一样深沉，是我的追求。' },
+        { name: '刘宏远', img: 'bass_08.jpg', intro: '我是刘宏远，计算机学院。代码与音符，都是0和1的艺术。' },
+        { name: '杨震宇', img: 'bass_09.jpg', intro: '我是杨震宇，物理学院。声波的震动，是物理学最美的部分。' },
+        // 继续添加...
+    ]
+    };
+
+       // 打开声部大弹窗（暴露到全局）
+    window.openSectionDetail = function(section, title, desc) {
+    document.getElementById('sectionModalTitle').innerText = title;
+    document.getElementById('sectionModalDesc').innerText = desc;
+    
+    const members = sectionMembers[section] || [];
+    const grid = document.getElementById('sectionMembersGrid');
+    grid.innerHTML = '';
+    
+    members.forEach(member => {
+        const memberDiv = document.createElement('div');
+        memberDiv.style.cssText = 'display: flex; flex-direction: column; align-items: center; cursor: pointer;';
+        memberDiv.onclick = function(e) {
+        e.stopPropagation();
+        showDetail(title, member.name, member.intro);
+        };
+        
+        const img = document.createElement('img');
+        img.src = member.img;
+        img.alt = member.name;
+        img.style.cssText = 'width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 2vw; border: 1px solid #d4af37;';
+        
+        const name = document.createElement('div');
+        name.innerText = member.name;
+        name.style.cssText = 'margin-top: 8px; font-size: clamp(0.9rem, 3.5vw, 1.1rem); color: #f3e3b0; text-align: center; font-weight: 500;';        
+        
+        memberDiv.appendChild(img);
+        memberDiv.appendChild(name);
+        grid.appendChild(memberDiv);
+    });
+    
+    document.getElementById('sectionModal').classList.remove('modal-hidden');
+    };
+
+    // 关闭声部大弹窗（暴露到全局）
+    window.closeSectionModal = function() {
+    document.getElementById('sectionModal').classList.add('modal-hidden');
+    };
+
       // 卡片淡入动画：观察所有 .fade-up 元素
     const fadeElements = document.querySelectorAll('.fade-up');
 
@@ -646,9 +924,153 @@
           }
         });
       });
-
       // 由于页面本身有 pageFadeIn 动画，滑动容器内的页面会逐个出现。
       // 同时卡片淡入也在工作，双重动画效果。
+
+        // ========== 横向滑动画廊逻辑（无限循环） ==========
+    const galleryScroll = document.getElementById('galleryScroll');
+    const galleryTrack = document.getElementById('galleryTrack');
+    const originalSlides = galleryTrack.querySelectorAll('.gallery-slide');
+    const dotsContainer = document.getElementById('galleryDots');
+    
+    const totalSlides = originalSlides.length;
+    
+    // 克隆首尾slide实现无限循环
+    const firstClone = originalSlides[0].cloneNode(true);
+    const lastClone = originalSlides[totalSlides - 1].cloneNode(true);
+    const secondClone = originalSlides[1] ? originalSlides[1].cloneNode(true) : null;
+    const secondLastClone = originalSlides[totalSlides - 2] ? originalSlides[totalSlides - 2].cloneNode(true) : null;
+    
+    // 在首尾各插入两个克隆
+    galleryTrack.insertBefore(secondLastClone || lastClone, originalSlides[0]);
+    galleryTrack.insertBefore(lastClone, originalSlides[0]);
+    galleryTrack.appendChild(firstClone);
+    if (secondClone) galleryTrack.appendChild(secondClone);
+    
+    const allSlides = galleryTrack.querySelectorAll('.gallery-slide');
+    const cloneCountBefore = 2;
+    
+    // 生成指示点
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('div');
+      dot.classList.add('gallery-dot');
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => {
+        goToSlide(i);
+      });
+      dotsContainer.appendChild(dot);
+    }
+    
+    const dots = dotsContainer.querySelectorAll('.gallery-dot');
+    
+    let currentRealIndex = 0;
+    let isTransitioning = false;
+    
+    function updateDots(realIndex) {
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === realIndex);
+      });
+    }
+    
+    function updateVisuals() {
+      const scrollCenter = galleryScroll.scrollLeft + galleryScroll.offsetWidth / 2;
+      allSlides.forEach((slide) => {
+        const slideCenter = slide.offsetLeft + slide.offsetWidth / 2;
+        const distanceFromCenter = Math.abs(scrollCenter - slideCenter);
+        const threshold = slide.offsetWidth * 0.6;
+        if (distanceFromCenter < threshold) {
+          const scale = 1 - (distanceFromCenter / threshold) * 0.12;
+          const opacity = 1 - (distanceFromCenter / threshold) * 0.45;
+          const brightness = 1 - (distanceFromCenter / threshold) * 0.3;
+          slide.style.transform = `scale(${Math.max(0.88, scale)})`;
+          slide.style.opacity = Math.max(0.55, opacity);
+          slide.style.filter = `brightness(${Math.max(0.7, brightness)})`;
+        } else {
+          slide.style.transform = 'scale(0.88)';
+          slide.style.opacity = '0.55';
+          slide.style.filter = 'brightness(0.7)';
+        }
+      });
+    }
+    
+    function goToSlide(realIndex) {
+      if (isTransitioning) return;
+      currentRealIndex = realIndex;
+      updateDots(realIndex);
+      const targetIndex = realIndex + cloneCountBefore;
+      allSlides[targetIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+    
+    let scrollTimeout;
+    galleryScroll.addEventListener('scroll', () => {
+      updateVisuals();
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        if (isTransitioning) return;
+        const scrollCenter = galleryScroll.scrollLeft + galleryScroll.offsetWidth / 2;
+        let closestIndex = 0;
+        let minDistance = Infinity;
+        allSlides.forEach((slide, index) => {
+          const slideCenter = slide.offsetLeft + slide.offsetWidth / 2;
+          const distance = Math.abs(scrollCenter - slideCenter);
+          if (distance < minDistance) {
+            minDistance = distance;
+            closestIndex = index;
+          }
+        });
+        if (closestIndex < cloneCountBefore) {
+          isTransitioning = true;
+          currentRealIndex = totalSlides - 1;
+          allSlides[currentRealIndex + cloneCountBefore].scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'center' });
+          updateDots(currentRealIndex);
+          setTimeout(() => { isTransitioning = false; }, 50);
+        } else if (closestIndex >= cloneCountBefore + totalSlides) {
+          isTransitioning = true;
+          currentRealIndex = 0;
+          allSlides[currentRealIndex + cloneCountBefore].scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'center' });
+          updateDots(currentRealIndex);
+          setTimeout(() => { isTransitioning = false; }, 50);
+        } else {
+          currentRealIndex = closestIndex - cloneCountBefore;
+          updateDots(currentRealIndex);
+        }
+      }, 80);
+    });
+    
+    // 初始化
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        allSlides[cloneCountBefore].scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'center' });
+      }, 300);
+    });
+    
+    // 鼠标拖拽
+    let isDown = false;
+    let startX;
+    let scrollLeftPos;
+    galleryScroll.addEventListener('mousedown', (e) => {
+      isDown = true;
+      galleryScroll.style.cursor = 'grabbing';
+      startX = e.pageX - galleryScroll.offsetLeft;
+      scrollLeftPos = galleryScroll.scrollLeft;
+    });
+    galleryScroll.addEventListener('mouseleave', () => {
+      isDown = false;
+      galleryScroll.style.cursor = 'grab';
+    });
+    galleryScroll.addEventListener('mouseup', () => {
+      isDown = false;
+      galleryScroll.style.cursor = 'grab';
+    });
+    galleryScroll.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - galleryScroll.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      galleryScroll.scrollLeft = scrollLeftPos - walk;
+    });
+    // ========== 画廊逻辑结束 ==========
+
     })();
   </script>
 </body>
