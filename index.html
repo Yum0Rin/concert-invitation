@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover, shrink-to-fit=no">
   <title>声生不息 · 星火长明 | 合唱音乐会邀请函</title>
+  <link href="https://fonts.lug.ustc.edu.cn/css2?family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -17,7 +18,7 @@
 
     body {
       background: #0a0c10;
-      font-family: 'Noto Serif SC', 'Times New Roman', '宋体', '仿宋', Georgia, serif;
+      font-family: 'Noto Serif SC', 'STSong', 'SimSun', 'Times New Roman', '宋体', '仿宋', Georgia, serif;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -77,10 +78,10 @@
         width: 85%;
         height: 65%;
         background: radial-gradient(ellipse at center top, 
-            rgba(255, 235, 170, 0.45) 0%,      /* 最亮点：暖金色 */
-            rgba(255, 210, 120, 0.28) 15%,
-            rgba(255, 190, 90, 0.16) 30%,
-            rgba(212, 175, 55, 0.08) 50%,
+            rgba(255, 235, 170, 0.6) 0%,      /* 最亮点：暖金色 */
+            rgba(255, 210, 120, 0.4) 15%,
+            rgba(255, 190, 90, 0.2) 30%,
+            rgba(212, 175, 55, 0.1) 50%,
             transparent 75%                     /* 完全透明发散 */
         );
         pointer-events: none;   /* 让光束不干扰按钮点击 */
@@ -131,7 +132,9 @@
       font-weight: 500;
       letter-spacing: 8px;
       color: #f3e7c4;
-      text-shadow: 0 0 15px #b49450;
+      text-shadow: 0 0 10px #b49450,
+        0 0 25px #b49450,
+        0 0 40px #d4af37; 
       margin-top: 3vh;
       margin-bottom: 2.5vh;
       line-height: 1.2;
@@ -178,7 +181,8 @@
 
     .scroll-hint {
       margin-top: 4vh;
-      font-size: clamp(0.75rem, 2.8vw, 0.9rem);
+      text-align: center;
+      font-size: clamp(0.6rem, 2.2vw, 0.75rem);
       opacity: 0.5;
       letter-spacing: 1px;
     }
@@ -188,21 +192,24 @@
         background: rgba(28, 30, 38, 0.8);
         backdrop-filter: blur(12px);
         border-radius: 5vw;                    /* 圆角随屏幕宽度 */
-        padding: 6vh 8vw;                      /* 上下6%屏高，左右8%屏宽 */
+        padding: 5vh 8vw;                      /* 上下6%屏高，左右8%屏宽 */
         border: 1px solid rgba(212, 175, 55, 0.25);
-        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7); 
         max-width: 90vw;                       /* 最大宽度90%屏宽 */
     }
 
     .card h2 {
-      font-size: clamp(1.3rem, 5vw, 1.8rem);
+      font-size: clamp(1.5rem, 7vw, 2.4rem);
       font-weight: 400;
-      color: #d4af37;
+      color: #ccc8b8;
       margin-bottom: 18px;
       text-align: center;
       letter-spacing: 4px;
       border-bottom: 1px dashed #d4af37;
       padding-bottom: 12px;
+      text-shadow: 
+        0 0 6px #b49450,
+        0 0 15px #b49450;
     }
 
     .intro-text p {
@@ -417,18 +424,36 @@
       margin-bottom: 4px;
     }
 
-    #modalRole {
-      text-indent: 0 !important;   /* 强制取消缩进 */
-      text-align: center !important;
-      margin-bottom: 12px;
+    #modalName {
+      color: #f3e7c4;
+      text-shadow: 
+        0 0 8px #b49450,
+        0 0 20px #b49450;
+      text-indent: 0;
+      text-align: center;
+      margin-bottom: 0;
     }
 
-    /* 只让描述文字缩进 */
+    #modalRole {
+      text-indent: 0 !important;
+      text-align: center !important;
+      margin-bottom: 0;
+      margin-top: 0.2vh;
+    }
+
     #modalDesc {
       text-align: left;
-      text-indent: 2em;
       line-height: 1.8;
       margin-top: 8px;
+    }
+
+    #sectionModalTitle {
+      color: #f3e7c4;
+      text-shadow: 
+          0 0 8px #b49450,
+          0 0 20px #b49450;
+      text-indent: 0;
+      text-align: center;
     }
 
     .modal-content button {
@@ -444,7 +469,6 @@
 
     .modal-content p {
     text-align: left;
-    text-indent: 2em;  /* 首行缩进两个字符 */
     margin-bottom: 8px;
     line-height: 1.6;
 }
@@ -521,14 +545,15 @@
     <a href="https://uri.amap.com/marker?position=115.813806,28.72668&name=萃庐音乐厅" class="btn-map" target="_blank">&ensp;点击导航&ensp;</a>
     <a href="javascript:void(0);" class="btn-map" id="gotoProgramBtn">直达节目单</a>
 </div>
-<p class="scroll-hint" style="margin-top: 0;">——— 向下滑动浏览完整邀请函 ———</p>
+<p class="scroll-hint" style="margin-top: 1vh; opacity: 0.6;transform: scale(0.85);">🎶点击右下角播放音乐🎶</p>
+<p class="scroll-hint" style="margin-top: 0;transform: scale(0.85);">——— 向下滑动浏览完整邀请函 ———</p>
       </div>
     </div>
 
     <!-- 页面2：邀请函正文 -->
     <div class="page" id="page2">
       <div class="card fade-up">
-        <h2>✨ 邀请函</h2>
+        <h2>邀请函</h2>
         <div class="intro-text">
           <p>尊敬的聆听者：</p>
           <p>&emsp;&emsp;您好！</p>
@@ -542,20 +567,21 @@
     <!-- 页面3：指挥 -->
     <div class="page" id="page3">
     <div class="card fade-up" style="text-align: center;">
-        <h2>🎵 指挥</h2>
+        <h2>指挥</h2>
         <div style="display: flex; flex-direction: column; align-items: center; margin-top: 16px;">
         <div class="person-item" onclick='showDetail("指挥", "刘子铉", "刘子铉，中共党员，本硕毕业于江西财经大学艺术学院音乐系。现任南昌理工学院音乐学院专任声乐教师，江西财经大学 \"红星\" 艺术团声歌队常任合唱指挥。曾多次参加合唱指挥类大师班进行学习。\n&emsp;&emsp;曾指导江西财经大学 \"红星\" 艺术团声歌队获江西省大学生第十一届艺术展演合唱本科甲组二等奖，连续两年获江西省大中小学合唱比赛大学生甲组一等奖、优秀指挥奖；指导经济学院、国贸学院荣获江西财经大学一二·九合唱比赛一等奖、最佳指挥奖；指导江西财经大学团委合唱代表队获 \"青春心向党、奋斗新征程\" 江西省各界青年庆祝中国共产党成立100周年歌咏大赛高校组二等奖；指导墩子塘街道办获南昌市东湖区庆祝中国共产党成立100周年群众歌咏比赛二等奖；曾获江西省第十届大学生艺术展演活动本科院校乙组声乐类一等奖、江西省第十五届 \"德艺双馨\" 通俗类成年A组金奖。")'>
             <img src="刘子铉.png" alt="刘子铉" style="width: auto; max-width: 70vw; height: auto; object-fit: contain; border-radius: 5vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
             <div class="person-name" style="font-size: 1.3rem; margin-top: 16px;">刘子铉</div>
         </div>
         </div>
+        <p class="scroll-hint" style="margin-top: 2vh;transform: scale(1.5);">点击照片查看简介</p>
     </div>
     </div>
 
     <!-- 页面4：艺术指导 -->
     <div class="page" id="page4">
     <div class="card fade-up">
-        <h2>🎹 艺术指导</h2>
+        <h2>艺术指导</h2>
         <div style="display: flex; justify-content: center; align-items: flex-start; gap: 4vw; margin-top: 16px;">
         <div class="person-item" onclick="showDetail('艺术指导', '王雅晴', '钢琴演奏硕士，多次担任声乐赛事的艺术指导。她擅长与合唱团呼吸相融，音乐温暖且充满张力。')" style="flex: 1; max-width: 38vw;">
             <img src="https://picsum.photos/id/20/200/200" alt="王雅晴" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
@@ -566,13 +592,14 @@
             <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">李明浩</div>
         </div>
         </div>
+        <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看简介</p>
     </div>
     </div>
 
     <!-- 页面5：主持人 -->
     <div class="page" id="page5">
     <div class="card fade-up">
-        <h2>🎤 主持人</h2>
+        <h2>主持人</h2>
         <div style="display: flex; justify-content: center; align-items: flex-start; gap: 4vw; margin-top: 16px;">
         <div class="person-item" onclick="showDetail('主持人', '陈思羽', '校主持人队队长，风格端庄大气，多次主持省级文艺汇演。')" style="flex: 1; max-width: 38vw;">
             <img src="https://picsum.photos/id/26/200/200" alt="陈思羽" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
@@ -583,13 +610,14 @@
             <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">张景轩</div>
         </div>
         </div>
+        <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看简介</p>
     </div>
     </div>
 
     <!-- 页面6：特邀嘉宾 -->
     <div class="page" id="page6">
     <div class="card fade-up">
-        <h2>⭐ 特邀嘉宾</h2>
+        <h2>特邀嘉宾</h2>
         <div style="display: flex; justify-content: center; align-items: flex-start; gap: 4vw; margin-top: 16px;">
         <div class="person-item" onclick="showDetail('特邀嘉宾', '杨茜雯', '青年女高音，曾获中国音乐金钟奖江西赛区银奖。')" style="flex: 1; max-width: 38vw;">
             <img src="https://picsum.photos/id/29/200/200" alt="杨茜雯" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
@@ -602,61 +630,67 @@
             <div class="role-tag">&ensp;琵琶&ensp;</div>
         </div>
         </div>
+        <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看简介</p>
     </div>
     </div>
 
     <!-- 页面7：合唱团介绍 -->
     <div class="page" id="page7">
     <div class="card fade-up" style="text-align: center;">
-        <h2>🌟 声歌队 · 合唱团</h2>
+        <h2>声歌队</h2>
         <div class="person-item" onclick="showDetail('合唱团', '红星艺术团声歌队', '江西财经大学\u201C红星\u201D艺术团声歌队，隶属于校艺术团，由来自学校各个年级不同专业的热爱音乐的学生组成。他们以动人的旋律、和谐的音色和精准的音高，呈现出深情的合唱作品。\n&emsp;&emsp;曾获全国第六届大学生艺术展国家级三等奖，江西省第二届、第三届大中小学生合唱比赛大学生甲组一等奖、江西省大学生第十一届艺术展演省级二等奖、江西省大学生第十届艺术展演省级二等奖、江西省大学生第九届艺术展演省级三等奖，江西省\u201C长征组歌\u201D合唱比赛三等奖等多项艺术类奖项。')">
         <img src="https://picsum.photos/id/98/600/300" alt="声歌队合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
         <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">江西财经大学"红星"艺术团声歌队，现有团员六十余人，来自各院系热爱合唱的学子。多次获得江西省大学生艺术展演一等奖，秉承"以美育人，以声传情"。</p>
         </div>
+        <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看简介</p>
     </div>
     </div>
 
     <!-- 页面8：女高音声部 Soprano -->
     <div class="page" id="page8">
     <div class="card fade-up" style="text-align: center;">
-        <h2>🎵 女高音声部</h2>
-        <div class="person-item" onclick="openSectionDetail('S', '女高音声部', '女高音是合唱中最高、最明亮的声部，如同星空中的北极星。她们用清澈透亮的音色，唱出旋律的灵魂。')">
+        <h2>Soprano 女高音</h2>
+        <div class="person-item" onclick="openSectionDetail('S', 'S · 女高音', '女高音是合唱中最高、最明亮的声部，如同星空中的北极星。她们用清澈透亮的音色，唱出旋律的灵魂。')">
         <img src="soprano_group.jpg" alt="女高音声部合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
         <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">女高音声部，合唱中最高的声部，担任主旋律的演绎。音色明亮、清澈，如星空中的北极星。</p>
         </div>
+        <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看成员介绍</p>
     </div>
     </div>
 
     <!-- 页面9：女中音声部 Alto -->
     <div class="page" id="page9">
     <div class="card fade-up" style="text-align: center;">
-        <h2>🎵 女中音声部</h2>
-        <div class="person-item" onclick="openSectionDetail('A', '女中音声部', '女中音是合唱中温暖的中声部，如同大地般沉稳包容。她们用醇厚的音色填充和声的肌理。')">
+        <h2>Alto 女中音</h2>
+        <div class="person-item" onclick="openSectionDetail('A', 'A · 女中音', '女中音是合唱中温暖的中声部，如同大地般沉稳包容。她们用醇厚的音色填充和声的肌理。')">
         <img src="alto_group.jpg" alt="女中音声部合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
         <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">女中音声部，合唱中的中声部，为和声提供温暖支撑。音色醇厚、柔美，如大地般包容。</p>
         </div>
+        <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看成员介绍</p>
     </div>
     </div>
 
     <!-- 页面10：男高音声部 Tenor -->
     <div class="page" id="page10">
     <div class="card fade-up" style="text-align: center;">
-        <h2>🎵 男高音声部</h2>
-        <div class="person-item" onclick="openSectionDetail('T', '男高音声部', '男高音是合唱中充满力量的高声部，如同破晓的晨光。他们用富有穿透力的音色，赋予音乐激情与张力。')">
+        <h2>Tenor 男高音</h2>
+        <div class="person-item" onclick="openSectionDetail('T', 'T · 男高音', '男高音是合唱中充满力量的高声部，如同破晓的晨光。他们用富有穿透力的音色，赋予音乐激情与张力。')">
         <img src="tenor_group.jpg" alt="男高音声部合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
         <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">男高音声部，合唱中充满力量的高声部。音色富有穿透力，如同破晓的晨光。</p>
         </div>
+        <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看成员介绍</p>
     </div>
     </div>
 
     <!-- 页面11：男低音声部 Bass -->
     <div class="page" id="page11">
     <div class="card fade-up" style="text-align: center;">
-        <h2>🎵 男低音声部</h2>
-        <div class="person-item" onclick="openSectionDetail('B', '男低音声部', '男低音是合唱中最深沉、最浑厚的声部，如同大地的心跳。他们用深厚的音色为合唱奠定坚实的基础。')">
+        <h2>Bass 男低音</h2>
+        <div class="person-item" onclick="openSectionDetail('B', 'B · 男低音', '男低音是合唱中最深沉、最浑厚的声部，如同大地的心跳。他们用深厚的音色为合唱奠定坚实的基础。')">
         <img src="bass_group.jpg" alt="男低音声部合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
         <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">男低音声部，合唱中最深沉浑厚的声部。音色宽广、深厚，如同大地的心跳。</p>
         </div>
+        <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看成员介绍</p>
     </div>
     </div>
 
@@ -729,7 +763,7 @@
         <!-- 声部成员大弹窗 -->
     <div id="sectionModal" class="modal modal-hidden" onclick="closeSectionModal()">
     <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 90vw; max-height: 85vh; width: 90vw; padding: 3vh 4vw;">
-        <h3 id="sectionModalTitle" style="color: #d4af37; font-size: clamp(1.2rem, 5vw, 1.5rem); margin-bottom: 8px;"></h3>
+        <h3 id="sectionModalTitle" style="font-size: clamp(1.2rem, 5vw, 1.5rem); margin-bottom: 8px;"></h3>
         <p id="sectionModalDesc" style="color: #ccc8b8; font-size: clamp(0.8rem, 3vw, 0.9rem); margin-bottom: 20px; text-align: center; text-indent: 0;"></p>
         <div id="sectionMembersGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-height: 55vh; overflow-y: auto; padding: 8px;">
         <!-- 动态生成成员列表 -->
@@ -800,57 +834,84 @@
     });
     }
 
-    // 声部成员数据（示例，请替换为实际数据）
-    const sectionMembers = {
+// 声部成员数据
+const sectionMembers = {
     'S': [
-        { name: '张馨月', img: 'soprano_01.jpg', intro: '我是张馨月，来自会计学院。热爱音乐，享受在合唱中找到共鸣的感觉。' },
-        { name: '李雨桐', img: 'soprano_02.jpg', intro: '我是李雨桐，金融学院大三学生。音乐是我生活中不可或缺的一部分。' },
-        { name: '王梦涵', img: 'soprano_03.jpg', intro: '我是王梦涵，来自法学院。在合唱中学会了倾听与配合。' },
-        { name: '赵思琪', img: 'soprano_04.jpg', intro: '我是赵思琪，国贸学院。女高音的旋律让我感受到飞翔的自由。' },
-        { name: '陈晓雯', img: 'soprano_05.jpg', intro: '我是陈晓雯，艺术学院。用歌声传递情感是我的追求。' },
-        { name: '刘诗雨', img: 'soprano_06.jpg', intro: '我是刘诗雨，统计学院。合唱教会我团队合作的重要性。' },
-        { name: '周芷若', img: 'soprano_07.jpg', intro: '我是周芷若，外语学院。音乐无国界，合唱让我们心灵相通。' },
-        { name: '吴雨霏', img: 'soprano_08.jpg', intro: '我是吴雨霏，经济学院。每一次排练都是心灵的洗礼。' },
-        { name: '郑雅文', img: 'soprano_09.jpg', intro: '我是郑雅文，工商管理学院。合唱让我找到归属感。' },
-        // 继续添加更多成员...
+        { name: '陈韵晗', img: 'members/陈韵晗.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '谭熙贝', img: 'members/谭熙贝.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '高雯钰', img: 'members/高雯钰.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '何佩燕', img: 'members/何佩燕.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '宋子艺', img: 'members/宋子艺.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '兰伊琪', img: 'members/兰伊琪.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '吕圣祎', img: 'members/吕圣祎.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '陈语涵', img: 'members/陈语涵.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '王凯茜', img: 'members/王凯茜.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '郭柔含', img: 'members/郭柔含.jpg', title: '该如何？', intro: '&emsp;&emsp;恭喜你一发抽中SSS级英雄该如何😉 凤凰鸣叫 百年难遇 留下三朵玫瑰花🌹🌹🌹 保佑全家平安🙏🙏🙏' },
+        { name: '褚婉娱', img: 'members/褚婉娱.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '朱雨涵', img: 'members/朱雨涵.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '甘溦祎', img: 'members/甘溦祎.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '王筱雅', img: 'members/王筱雅.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '龚钰涵', img: 'members/龚钰涵.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '李雅滢', img: 'members/李雅滢.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '邹雯佳', img: 'members/邹雯佳.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '夏凯文', img: 'members/夏凯文.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '罗子星', img: 'members/罗子星.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '王婉婧', img: 'members/王婉婧.png', title: '女高音', intro: 'xxxxxx' },
     ],
     'A': [
-        { name: '杨柳青', img: 'alto_01.jpg', intro: '我是杨柳青，人文学院。女中音的厚重感让我着迷。' },
-        { name: '林晓芳', img: 'alto_02.jpg', intro: '我是林晓芳，财税学院。在和声中找到自己的位置很重要。' },
-        { name: '黄诗涵', img: 'alto_03.jpg', intro: '我是黄诗涵，国际学院。音乐让我的大学生活更加丰富多彩。' },
-        { name: '孙雅婷', img: 'alto_04.jpg', intro: '我是孙雅婷，软件学院。理工科女生也有一颗文艺的心。' },
-        { name: '马丽娜', img: 'alto_05.jpg', intro: '我是马丽娜，旅游学院。合唱让我学会了坚持与热爱。' },
-        { name: '朱晓琳', img: 'alto_06.jpg', intro: '我是朱晓琳，体育学院。音乐的节奏与运动的韵律相通。' },
-        { name: '胡佳怡', img: 'alto_07.jpg', intro: '我是胡佳怡，新闻学院。用笔记录生活，用歌声表达情感。' },
-        { name: '高雅楠', img: 'alto_08.jpg', intro: '我是高雅楠，数学学院。数字与音符都是宇宙的语言。' },
-        { name: '罗敏华', img: 'alto_09.jpg', intro: '我是罗敏华，公管学院。合唱团是我大学最温暖的港湾。' },
-        // 继续添加...
+        { name: '汤子瑶', img: 'members/汤子瑶.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '张家慧', img: 'members/张家慧.jpg', title: '和声守护.部落公主.紫荆花', intro: '&emsp;&emsp;我是张家慧，是一名在声歌队945天的“老成员”，担当热可可般丝滑浓郁的女中角色，守护合唱的和声！' },
+        { name: '兰宇轩', img: 'members/兰宇轩.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '刘璟玥', img: 'members/刘璟玥.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '杜奕煊', img: 'members/杜奕煊.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '彭雅琦', img: 'members/彭雅琦.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '张妙涵', img: 'members/张妙涵.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '颜瑜', img: 'members/颜瑜.jpg', title: '女中咸鱼一条', intro: '&emsp;&emsp;我是颜瑜，来自经济学院，属于合唱团女中音。不来听我们音乐会的话，我就要变异咬人了😕' },
+        { name: '徐安然', img: 'members/徐安然.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '许歆祺', img: 'members/许歆祺.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '曾佳怡', img: 'members/曾佳怡.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '郭忆', img: 'members/郭忆.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '谢雪', img: 'members/谢雪.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '李文依', img: 'members/李文依.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '胡钰浣', img: 'members/胡钰浣.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '何璐', img: 'members/何璐.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '沈雅玲', img: 'members/沈雅玲.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '陈柯羽', img: 'members/陈柯羽.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '程旭', img: 'members/程旭.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '韦祥玉', img: 'members/韦祥玉.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '邹雨宣', img: 'members/邹雨宣.png', title: '女中音', intro: 'xxxxxx' },
     ],
     'T': [
-        { name: '陈浩宇', img: 'tenor_01.jpg', intro: '我是陈浩宇，信管学院。男高音的力量感让我热血沸腾。' },
-        { name: '张伟杰', img: 'tenor_02.jpg', intro: '我是张伟杰，物流学院。在合唱中释放压力、找到快乐。' },
-        { name: '李俊峰', img: 'tenor_03.jpg', intro: '我是李俊峰，工程学院。音乐是工程之外的另一种创造。' },
-        { name: '刘明哲', img: 'tenor_04.jpg', intro: '我是刘明哲，法学院。严谨的法律之外，音乐让我柔软。' },
-        { name: '王子豪', img: 'tenor_05.jpg', intro: '我是王子豪，国贸学院。高音是我的骄傲，合唱是我的热爱。' },
-        { name: '杨凯文', img: 'tenor_06.jpg', intro: '我是杨凯文，金融学院。用歌声点亮青春。' },
-        { name: '赵天宇', img: 'tenor_07.jpg', intro: '我是赵天宇，会计学院。数字之外，音乐是我的解药。' },
-        { name: '吴浩然', img: 'tenor_08.jpg', intro: '我是吴浩然，经济学院。合唱让我懂得个体与整体的和谐。' },
-        { name: '黄志远', img: 'tenor_09.jpg', intro: '我是黄志远，统计学院。数据与旋律，理性与感性的融合。' },
-        // 继续添加...
+        { name: '熊冠哲', img: 'members/熊冠哲.png', title: '男高音', intro: 'xxxxxx' },
+        { name: '叶嘉乐', img: 'members/叶嘉乐.png', title: '男高音', intro: 'xxxxxx' },
+        { name: '郭一鸣', img: 'members/郭一鸣.png', title: '男高音', intro: 'xxxxxx' },
+        { name: '朱程昱祺', img: 'members/朱程昱祺.png', title: '男高音', intro: 'xxxxxx' },
+        { name: '熊文', img: 'members/熊文.png', title: '男高音', intro: 'xxxxxx' },
+        { name: '程一龙', img: 'members/程一龙.png', title: '男高音', intro: 'xxxxxx' },
+        { name: '刘逸哲', img: 'members/刘逸哲.png', title: '男高音', intro: 'xxxxxx' },
+        { name: '贺俊杰', img: 'members/贺俊杰.png', title: '男高音', intro: 'xxxxxx' },
+        { name: '桑正阳', img: 'members/桑正阳.jpg', title: '乐呵呵的悲观主义者', intro: '&emsp;&emsp;本人风趣幽默，耐心体贴，热爱生活，喜好音乐、运动、摄影……算是个有趣的灵魂吧：）' },
+        { name: '车立庸', img: 'members/车立庸.png', title: '男高音', intro: 'xxxxxx' },
+        { name: '李文轩', img: 'members/李文轩.png', title: '男高音', intro: 'xxxxxx' },
+        { name: '蔡麒轩', img: 'members/蔡麒轩.png', title: '男高音', intro: 'xxxxxx' },
+        { name: '毛嘉辉', img: 'members/毛嘉辉.png', title: '男高音', intro: 'xxxxxx' },
+        { name: '龙泽川', img: 'members/龙泽川.jpeg', title: '小龙', intro: '新男高们，我会把你们打回男低\n如果男高是你们的，证明给我看\n过得了我，再谈换届\n这第四次的音乐会，我想送给我的男通声部' },
+        { name: '杜佳熠', img: 'members/杜佳熠.png', title: '男高音', intro: 'xxxxxx' },
     ],
     'B': [
-        { name: '郑海龙', img: 'bass_01.jpg', intro: '我是郑海龙，艺术学院。男低音的厚重是合唱的基石。' },
-        { name: '林志豪', img: 'bass_02.jpg', intro: '我是林志豪，体育学院。低音炮的称号让我自豪。' },
-        { name: '陈国栋', img: 'bass_03.jpg', intro: '我是陈国栋，建筑学院。建筑是凝固的音乐，音乐是流动的建筑。' },
-        { name: '张永强', img: 'bass_04.jpg', intro: '我是张永强，机电学院。机械之外，音乐是我内心的柔软。' },
-        { name: '李大山', img: 'bass_05.jpg', intro: '我是李大山，农学院。土地与歌声，都让人踏实。' },
-        { name: '王铁柱', img: 'bass_06.jpg', intro: '我是王铁柱，材料学院。最硬的专业，最深的低音。' },
-        { name: '赵大海', img: 'bass_07.jpg', intro: '我是赵大海，海洋学院。像大海一样深沉，是我的追求。' },
-        { name: '刘宏远', img: 'bass_08.jpg', intro: '我是刘宏远，计算机学院。代码与音符，都是0和1的艺术。' },
-        { name: '杨震宇', img: 'bass_09.jpg', intro: '我是杨震宇，物理学院。声波的震动，是物理学最美的部分。' },
-        // 继续添加...
+        { name: '张育昊', img: 'members/张育昊.png', title: '男低音', intro: 'xxxxxx' },
+        { name: '刘宇杰', img: 'members/刘宇杰.jpg', title: 'JjCo1a', intro: '&emsp;&emsp;dev1ce他的狙，😲他是已经被白走了吗？😲啊？😲还？😲啊？😲devi，😲啊？😲这是人类啊？😭哦，br0也没杀人😭这局，这局没有人类了，😭只有🐍😭，只有🐭😭，只有沟槽的野榜😭，只有...啊😭我在看什么😭' },
+        { name: '孙嘉泽', img: 'members/孙嘉泽.png', title: '男低音', intro: 'xxxxxx' },
+        { name: '陈思恩', img: 'members/陈思恩.png', title: '男低音', intro: 'xxxxxx' },
+        { name: '李成鸿', img: 'members/李成鸿.png', title: '男低音', intro: 'xxxxxx' },
+        { name: '黄聿江', img: 'members/黄聿江.png', title: '男低音', intro: 'xxxxxx' },
+        { name: '熊浩屹', img: 'members/熊浩屹.png', title: '男低音', intro: 'xxxxxx' },
+        { name: '周家军', img: 'members/周家军.png', title: '男低音', intro: 'xxxxxx' },
+        { name: '陈宇涵', img: 'members/陈宇涵.png', title: '男低音', intro: 'xxxxxx' },
+        { name: '罗天宇', img: 'members/罗天宇.png', title: '男低音', intro: 'xxxxxx' },
+        { name: '林思成', img: 'members/林思成.png', title: '男低音', intro: 'xxxxxx' },
     ]
-    };
+};
 
        // 打开声部大弹窗（暴露到全局）
     window.openSectionDetail = function(section, title, desc) {
@@ -866,7 +927,7 @@
         memberDiv.style.cssText = 'display: flex; flex-direction: column; align-items: center; cursor: pointer;';
         memberDiv.onclick = function(e) {
         e.stopPropagation();
-        showDetail(title, member.name, member.intro);
+        showDetail(member.title, member.name, member.intro);
         };
         
         const img = document.createElement('img');
