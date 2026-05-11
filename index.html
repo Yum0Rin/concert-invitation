@@ -18,6 +18,7 @@
 
     body {
       background: #0a0c10;
+      overflow-x: hidden;
       font-family: 'Noto Serif SC', 'STSong', 'SimSun', 'Times New Roman', '宋体', '仿宋', Georgia, serif;
       display: flex;
       flex-direction: column;
@@ -34,6 +35,7 @@
         width: 100%;
         height: 100vh;
         overflow-y: scroll;
+        overflow-x: hidden;
         scroll-snap-type: y mandatory;
         scroll-behavior: smooth;
         position: relative;
@@ -195,7 +197,10 @@
         padding: 5vh 8vw;                      /* 上下6%屏高，左右8%屏宽 */
         border: 1px solid rgba(212, 175, 55, 0.25);
         box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7); 
+        width: 90vw;
         max-width: 90vw;                       /* 最大宽度90%屏宽 */
+        margin: 0 auto; 
+        box-sizing: border-box;
     }
 
     .card h2 {
@@ -726,7 +731,7 @@
         <!-- 页面14：风采展示 -->
     <div class="page" id="page14">
       <div class="card fade-up" style="padding: 4vh 2vw;">
-        <h2>📸 声歌队·精彩瞬间</h2>
+        <h2>声歌队·精彩瞬间</h2>
         <div class="gallery-scroll" id="galleryScroll">
           <div class="gallery-track" id="galleryTrack">
             <div class="gallery-slide">
@@ -753,7 +758,7 @@
     <!-- 页面15：致谢 -->
     <div class="page" id="page15">
       <div class="card fade-up" style="text-align: center;">
-        <h2>❤️ 致谢</h2>
+        <h2>致谢</h2>
         <p>感谢所有为声歌队付出的小伙伴们，感谢指挥与艺术指导，感谢学校团委的支持。</p>
         <p style="margin-top: 24px;">2026.05.31 期待您的到来，我们音乐厅见！</p>
         <footer>江西财经大学“红星”艺术团声歌队 敬邀</footer>
@@ -848,7 +853,7 @@ const sectionMembers = {
         { name: '王凯茜', img: 'members/王凯茜.png', title: '女高音', intro: 'xxxxxx' },
         { name: '郭柔含', img: 'members/郭柔含.jpg', title: '该如何？', intro: '&emsp;&emsp;恭喜你一发抽中SSS级英雄该如何😉 凤凰鸣叫 百年难遇 留下三朵玫瑰花🌹🌹🌹 保佑全家平安🙏🙏🙏' },
         { name: '褚婉娱', img: 'members/褚婉娱.png', title: '女高音', intro: 'xxxxxx' },
-        { name: '朱雨涵', img: 'members/朱雨涵.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '朱雨涵', img: 'members/朱雨涵.jpg', title: 'SENOUTH=w=', intro: '江苏淮安｜软工｜INFP｜已飞0国｜\n国家级身份证持有者｜CONO店铺资深买手｜\nSS\x27S非常驻嘉宾｜奇迹大陆土著｜\n熟练掌握蓝绿修改器｜产品遍地，欢迎品鉴～' },
         { name: '甘溦祎', img: 'members/甘溦祎.png', title: '女高音', intro: 'xxxxxx' },
         { name: '王筱雅', img: 'members/王筱雅.png', title: '女高音', intro: 'xxxxxx' },
         { name: '龚钰涵', img: 'members/龚钰涵.png', title: '女高音', intro: 'xxxxxx' },
