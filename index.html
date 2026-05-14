@@ -13,7 +13,7 @@
     }
 
     html {
-    font-size: clamp(14px, 3.5vw, 28px);
+    font-size: clamp(16px, 5vw, 28px);
     }
 
     body {
@@ -39,7 +39,8 @@
         scroll-snap-type: y mandatory;
         scroll-behavior: smooth;
         position: relative;
-        background: radial-gradient(#0a1420);
+        z-index: 1;
+        background: radial-gradient(#141e2d);
         scroll-snap-stop: always; 
         overscroll-behavior-y: contain;
     }
@@ -71,6 +72,8 @@
       user-select: none;
       -webkit-user-select: none;
       -webkit-tap-highlight-color: transparent;
+      position: relative;
+      z-index: 10;
     }
 
     /* 舞台光束层 */
@@ -92,6 +95,8 @@
         z-index: 2;             /* 放在最底层，hero 在上面 */
         border-radius: 0;       /* 无圆角，自然发散 */
     }
+
+
 
     /* 页面入场动画 */
     @keyframes pageFadeIn {
@@ -157,10 +162,10 @@
       z-index: 1;
       text-align: center;
       padding: 30px 10px 20px;
-      background: radial-gradient(circle at top, #2a2d3a, #0f1117);
+      background: radial-gradient(circle at top, rgba(63, 67, 86, 0.75), rgba(25, 29, 42, 0.85));
       border-radius: 56px 56px 40px 40px;
       margin-bottom: 8px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 5px 15px rgba(0, 0, 0, 0.4);
       border-bottom: 1px solid #d4af37;
     }
 
@@ -226,25 +231,24 @@
 
     /* 卡片样式 */
     .card {
-        background: rgba(28, 30, 38, 0.8);
+        background: radial-gradient(circle at top, rgba(63, 67, 86, 0.75), rgba(25, 29, 42, 0.85));
         backdrop-filter: blur(12px);
-        border-radius: 5vw;                    /* 圆角随屏幕宽度 */
-        padding: 5vh 8vw;                      /* 上下6%屏高，左右8%屏宽 */
-        border: 1px solid rgba(212, 175, 55, 0.25);
-        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7); 
+        border-radius: 56px 56px 40px 40px;
+        padding: 5vh 8vw;
+        box-shadow:0 15px 35px rgba(0, 0, 0, 0.8), 0 5px 15px rgba(0, 0, 0, 0.4);
         width: 90vw;
-        max-width: 90vw;                       /* 最大宽度90%屏宽 */
-        margin: 0 auto; 
+        max-width: 90vw;
+        margin: 0 auto;
         box-sizing: border-box;
     }
 
     .card h2 {
       font-size: clamp(1.5rem, 7vw, 2.4rem);
-      font-weight: 400;
+      font-weight: 600;
       color: #ccc8b8;
       margin-bottom: 18px;
       text-align: center;
-      letter-spacing: 4px;
+      letter-spacing: 8px;
       border-bottom: 1px dashed #d4af37;
       padding-bottom: 12px;
       text-shadow: 
@@ -272,10 +276,6 @@
       align-items: center;
       cursor: pointer;
       transition: transform 0.25s ease;
-    }
-
-    .person-item:hover {
-      transform: scale(1.02);
     }
 
     /* 生活照：高4宽3 比例 -> 宽度3，高度4。设定宽度90px，高度120px */
@@ -450,6 +450,7 @@
       border: 1px solid #d4af37;
       border-radius: 5vw;
       padding: 4vh 5vw;
+      width: 75vw;
       max-width: 75vw;
       max-height: 70vh;
       overflow: hidden;
@@ -488,6 +489,7 @@
       flex: 1;                      /* 👈 占满剩余空间 */
       overflow-y: auto;             /* 👈 独立滚动 */
       padding: 8px 0;
+      text-align: center;         /* 👈 让内部 inline-block 居中 */
     }
 
     #modalName {
@@ -498,6 +500,7 @@
       text-indent: 0;
       text-align: center;
       margin-bottom: 0;
+      letter-spacing: 2.5px;
     }
 
     #modalRole {
@@ -511,6 +514,10 @@
       text-align: left;
       line-height: 1.8;
       margin-top: 8px;
+      display: inline-block;      /* 👈 让内容根据文字宽度收缩 */
+      width: auto;                /* 👈 取消全宽 */
+      min-width: 200px;           /* 👈 最小宽度，太窄也不好看 */
+      max-width: 65ch;            /* 👈 最大宽度限制，保持阅读舒适 */
     }
 
     #sectionModalTitle {
@@ -523,8 +530,8 @@
     }
 
     #sectionModal .modal-content {
-    animation: modalPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
+      animation: modalPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
 
     .modal-content button {
       margin-top: 18px;
@@ -604,6 +611,7 @@
 </head>
 <body>
   <div class="swipe-container" id="swipeContainer">
+    <canvas id="bgCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none;"></canvas>
     <!-- 页面1：封面页 -->
     <div class="page" id="page1">
       <div class="stage-beam"></div>
@@ -634,8 +642,8 @@
         <div class="intro-text">
           <p>尊敬的聆听者：</p>
           <p>&emsp;&emsp;您好！</p>
-          <p>&emsp;&emsp;兹定于2026年5月31日18:00江西财经大学麦庐园校区艺术学院音乐厅举办江西财经大学“红星”艺术团“声生不息，星火长明”声歌队合唱专场音乐会。</p>
-          <p>&emsp;&emsp;诚邀您届时出席，莅临指导！</p>
+          <p>&emsp;&emsp;兹定于 2026年5月31日 18:00 江西财经大学麦庐园校区艺术学院音乐厅举办江西财经大学“红星”艺术团“声生不息，星火长明”声歌队合唱专场音乐会。</p>
+          <p>&emsp;&emsp;诚邀您届时出席，共赴声生不息之约！</p>
           <p style="text-align: right; margin-top: 28px;">—— 声歌队敬上</p>
         </div>
       </div>
@@ -646,7 +654,7 @@
     <div class="card fade-up" style="text-align: center;">
         <h2>指挥</h2>
         <div style="display: flex; flex-direction: column; align-items: center; margin-top: 16px;">
-        <div class="person-item" onclick='showDetail("指挥", "刘子铉", "刘子铉，中共党员，本硕毕业于江西财经大学艺术学院音乐系。现任南昌理工学院音乐学院专任声乐教师，江西财经大学 \"红星\" 艺术团声歌队常任合唱指挥。曾多次参加合唱指挥类大师班进行学习。\n&emsp;&emsp;曾指导江西财经大学 \"红星\" 艺术团声歌队获江西省大学生第十一届艺术展演合唱本科甲组二等奖，连续两年获江西省大中小学合唱比赛大学生甲组一等奖、优秀指挥奖；指导经济学院、国贸学院荣获江西财经大学一二·九合唱比赛一等奖、最佳指挥奖；指导江西财经大学团委合唱代表队获 \"青春心向党、奋斗新征程\" 江西省各界青年庆祝中国共产党成立100周年歌咏大赛高校组二等奖；指导墩子塘街道办获南昌市东湖区庆祝中国共产党成立100周年群众歌咏比赛二等奖；曾获江西省第十届大学生艺术展演活动本科院校乙组声乐类一等奖、江西省第十五届 \"德艺双馨\" 通俗类成年A组金奖。")'>
+        <div class="person-item" onclick='showDetail("指挥", "刘子铉", "&emsp;&emsp;刘子铉，中共党员，本硕毕业于江西财经大学艺术学院音乐系。现任南昌理工学院音乐学院专任声乐教师，江西财经大学 \"红星\" 艺术团声歌队常任合唱指挥。曾多次参加合唱指挥类大师班进行学习。\n&emsp;&emsp;曾指导江西财经大学 \"红星\" 艺术团声歌队获江西省大学生第十一届艺术展演合唱本科甲组二等奖，连续两年获江西省大中小学合唱比赛大学生甲组一等奖、优秀指挥奖；指导经济学院、国贸学院荣获江西财经大学一二·九合唱比赛一等奖、最佳指挥奖；指导江西财经大学团委合唱代表队获 \"青春心向党、奋斗新征程\" 江西省各界青年庆祝中国共产党成立100周年歌咏大赛高校组二等奖；指导墩子塘街道办获南昌市东湖区庆祝中国共产党成立100周年群众歌咏比赛二等奖；曾获江西省第十届大学生艺术展演活动本科院校乙组声乐类一等奖、江西省第十五届 \"德艺双馨\" 通俗类成年A组金奖。")'>
             <img src="刘子铉.png" alt="刘子铉" style="width: auto; max-width: 70vw; height: auto; object-fit: contain; border-radius: 5vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
             <div class="person-name" style="font-size: 1.3rem; margin-top: 16px;">刘子铉</div>
         </div>
@@ -660,12 +668,12 @@
     <div class="card fade-up">
         <h2>艺术指导</h2>
         <div style="display: flex; justify-content: center; align-items: flex-start; gap: 4vw; margin-top: 16px;">
-        <div class="person-item" onclick="showDetail('艺术指导', '孙嘉泽', '钢琴演奏硕士，多次担任声乐赛事的艺术指导。她擅长与合唱团呼吸相融，音乐温暖且充满张力。')" style="flex: 1; max-width: 38vw;">
-            <img src="https://picsum.photos/id/20/200/200" alt="孙嘉泽" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
+        <div class="person-item" onclick="showDetail('艺术指导', '孙嘉泽', 'xxxxxx')" style="flex: 1; max-width: 38vw;">
+            <img src="/concert/members/孙嘉泽.jpg" alt="孙嘉泽" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
             <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">孙嘉泽</div>
         </div>
-        <div class="person-item" onclick="showDetail('艺术指导', '车立庸', '旅美合作钢琴家，专注声乐艺术指导，他的键盘色彩丰富，广受好评。')" style="flex: 1; max-width: 38vw;">
-            <img src="https://picsum.photos/id/64/200/200" alt="车立庸" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
+        <div class="person-item" onclick="showDetail('艺术指导', '车立庸', 'xxxxxx')" style="flex: 1; max-width: 38vw;">
+            <img src="/concert/members/车立庸.jpg" alt="车立庸" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
             <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">车立庸</div>
         </div>
         </div>
@@ -678,13 +686,13 @@
     <div class="card fade-up">
         <h2>主持人</h2>
         <div style="display: flex; justify-content: center; align-items: flex-start; gap: 4vw; margin-top: 16px;">
-        <div class="person-item" onclick="showDetail('主持人', '陈思羽', '校主持人队队长，风格端庄大气，多次主持省级文艺汇演。')" style="flex: 1; max-width: 38vw;">
-            <img src="https://picsum.photos/id/26/200/200" alt="陈思羽" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
-            <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">陈思羽</div>
+        <div class="person-item" onclick="showDetail('主持人', 'xxx', 'xxxxxx')" style="flex: 1; max-width: 38vw;">
+            <img src="/concert/members/xxx.jpg" alt="xxx" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
+            <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">xxx</div>
         </div>
-        <div class="person-item" onclick="showDetail('主持人', '张景轩', '播音主持专业，声音醇厚，善于带动现场气氛。')" style="flex: 1; max-width: 38vw;">
-            <img src="https://picsum.photos/id/36/200/200" alt="张景轩" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
-            <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">张景轩</div>
+        <div class="person-item" onclick="showDetail('主持人', 'xxx', '播音主持专业，声音醇厚，善于带动现场气氛。')" style="flex: 1; max-width: 38vw;">
+            <img src="/concert/members/xxx.jpg" alt="xxx" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
+            <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">xxx</div>
         </div>
         </div>
         <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看简介</p>
@@ -696,14 +704,14 @@
     <div class="card fade-up">
         <h2>特邀嘉宾</h2>
         <div style="display: flex; justify-content: center; align-items: flex-start; gap: 4vw; margin-top: 16px;">
-        <div class="person-item" onclick="showDetail('特邀嘉宾', '杨茜雯', '青年女高音，曾获中国音乐金钟奖江西赛区银奖。')" style="flex: 1; max-width: 38vw;">
-            <img src="https://picsum.photos/id/29/200/200" alt="杨茜雯" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
-            <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">杨茜雯</div>
+        <div class="person-item" onclick="showDetail('特邀嘉宾', 'xxx', 'xxxxxx')" style="flex: 1; max-width: 38vw;">
+            <img src="/concert/members/xxx.jpg" alt="xxx" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
+            <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">xxx</div>
             <div class="role-tag">小提琴</div>
         </div>
-        <div class="person-item" onclick="showDetail('特邀嘉宾', '李宗瀚', '男中音，硕士毕业于武汉音乐学院，演唱富有感染力。')" style="flex: 1; max-width: 38vw;">
-            <img src="https://picsum.photos/id/91/200/200" alt="李宗瀚" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
-            <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">李宗瀚</div>
+        <div class="person-item" onclick="showDetail('特邀嘉宾', 'xxx', 'xxxxxx')" style="flex: 1; max-width: 38vw;">
+            <img src="/concert/members/xxx.jpg" alt="xxx" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
+            <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">xxx</div>
             <div class="role-tag">&ensp;琵琶&ensp;</div>
         </div>
         </div>
@@ -715,9 +723,9 @@
     <div class="page" id="page7">
     <div class="card fade-up" style="text-align: center;">
         <h2>声歌队</h2>
-        <div class="person-item" onclick="showDetail('合唱团', '红星艺术团声歌队', '江西财经大学\u201C红星\u201D艺术团声歌队，隶属于校艺术团，由来自学校各个年级不同专业的热爱音乐的学生组成。他们以动人的旋律、和谐的音色和精准的音高，呈现出深情的合唱作品。\n&emsp;&emsp;曾获全国第六届大学生艺术展国家级三等奖，江西省第二届、第三届大中小学生合唱比赛大学生甲组一等奖、江西省大学生第十一届艺术展演省级二等奖、江西省大学生第十届艺术展演省级二等奖、江西省大学生第九届艺术展演省级三等奖，江西省\u201C长征组歌\u201D合唱比赛三等奖等多项艺术类奖项。')">
+        <div class="person-item" onclick="showDetail('合唱团', '红星艺术团声歌队', '&emsp;&emsp;江西财经大学\u201C红星\u201D艺术团声歌队，隶属于校艺术团，由来自学校各个年级不同专业的热爱音乐的学生组成。他们以动人的旋律、和谐的音色和精准的音高，呈现出深情的合唱作品。\n&emsp;&emsp;曾获全国第六届大学生艺术展国家级三等奖，江西省第二届、第三届大中小学生合唱比赛大学生甲组一等奖、江西省大学生第十一届艺术展演省级二等奖、江西省大学生第十届艺术展演省级二等奖、江西省大学生第九届艺术展演省级三等奖，江西省\u201C长征组歌\u201D合唱比赛三等奖等多项艺术类奖项。')">
         <img src="https://picsum.photos/id/98/600/300" alt="声歌队合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
-        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">江西财经大学"红星"艺术团声歌队，现有团员六十余人，来自各院系热爱合唱的学子。多次获得江西省大学生艺术展演一等奖，秉承"以美育人，以声传情"。</p>
+        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">&emsp;&emsp;江西财经大学"红星"艺术团声歌队，现有团员六十余人，来自各院系热爱合唱的学子。多次获得江西省大学生艺术展演一等奖，秉承"以美育人，以声传情"。</p>
         </div>
         <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看简介</p>
     </div>
@@ -727,9 +735,9 @@
     <div class="page" id="page8">
     <div class="card fade-up" style="text-align: center;">
         <h2>Soprano 女高音</h2>
-        <div class="person-item" onclick="openSectionDetail('S', 'S · 女高音', '女高音是合唱中最高、最明亮的声部，如同星空中的北极星。她们用清澈透亮的音色，唱出旋律的灵魂。')">
+        <div class="person-item" onclick="openSectionDetail('S', 'S · 女高音', '&emsp;&emsp;女高音是合唱中最高、最明亮的声部，如同星空中的北极星。她们用清澈透亮的音色，唱出旋律的灵魂。')">
         <img src="soprano_group.jpg" alt="女高音声部合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
-        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">女高音声部，合唱中最高的声部，担任主旋律的演绎。音色明亮、清澈，如星空中的北极星。</p>
+        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">&emsp;&emsp;女高音声部，合唱中最高的声部，担任主旋律的演绎。音色明亮、清澈，如星空中的北极星。</p>
         </div>
         <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看成员介绍</p>
     </div>
@@ -739,9 +747,9 @@
     <div class="page" id="page9">
     <div class="card fade-up" style="text-align: center;">
         <h2>Alto 女中音</h2>
-        <div class="person-item" onclick="openSectionDetail('A', 'A · 女中音', '女中音是合唱中温暖的中声部，如同大地般沉稳包容。她们用醇厚的音色填充和声的肌理。')">
+        <div class="person-item" onclick="openSectionDetail('A', 'A · 女中音', '&emsp;&emsp;女中音是合唱中温暖的中声部，如同大地般沉稳包容。她们用醇厚的音色填充和声的肌理。')">
         <img src="alto_group.jpg" alt="女中音声部合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
-        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">女中音声部，合唱中的中声部，为和声提供温暖支撑。音色醇厚、柔美，如大地般包容。</p>
+        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">&emsp;&emsp;女中音声部，合唱中的中声部，为和声提供温暖支撑。音色醇厚、柔美，如大地般包容。</p>
         </div>
         <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看成员介绍</p>
     </div>
@@ -751,9 +759,9 @@
     <div class="page" id="page10">
     <div class="card fade-up" style="text-align: center;">
         <h2>Tenor 男高音</h2>
-        <div class="person-item" onclick="openSectionDetail('T', 'T · 男高音', '男高音是合唱中充满力量的高声部，如同破晓的晨光。他们用富有穿透力的音色，赋予音乐激情与张力。')">
+        <div class="person-item" onclick="openSectionDetail('T', 'T · 男高音', '&emsp;&emsp;男高音是合唱中充满力量的高声部，如同破晓的晨光。他们用富有穿透力的音色，赋予音乐激情与张力。')">
         <img src="tenor_group.jpg" alt="男高音声部合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
-        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">男高音声部，合唱中充满力量的高声部。音色富有穿透力，如同破晓的晨光。</p>
+        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">&emsp;&emsp;男高音声部，合唱中充满力量的高声部。音色富有穿透力，如同破晓的晨光。</p>
         </div>
         <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看成员介绍</p>
     </div>
@@ -763,9 +771,9 @@
     <div class="page" id="page11">
     <div class="card fade-up" style="text-align: center;">
         <h2>Bass 男低音</h2>
-        <div class="person-item" onclick="openSectionDetail('B', 'B · 男低音', '男低音是合唱中最深沉、最浑厚的声部，如同大地的心跳。他们用深厚的音色为合唱奠定坚实的基础。')">
+        <div class="person-item" onclick="openSectionDetail('B', 'B · 男低音', '&emsp;&emsp;男低音是合唱中最深沉、最浑厚的声部，如同大地的心跳。他们用深厚的音色为合唱奠定坚实的基础。')">
         <img src="bass_group.jpg" alt="男低音声部合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
-        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">男低音声部，合唱中最深沉浑厚的声部。音色宽广、深厚，如同大地的心跳。</p>
+        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">&emsp;&emsp;男低音声部，合唱中最深沉浑厚的声部。音色宽广、深厚，如同大地的心跳。</p>
         </div>
         <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看成员介绍</p>
     </div>
@@ -776,13 +784,11 @@
     <div class="card fade-up">
         <h2>节目单</h2>
         <div style="color: #d4af37; font-size: 0.9rem; letter-spacing: 2px; margin: 8px 0 14px 0; text-align: center;">—— 上半场 ——</div>
-        <div class="song-item"><span>《城南送别》</span><span>词:李叔同 曲:周鑫泉</span></div>
-        <div class="song-item"><span>《大鱼》</span><span>词:尹约 曲:钱雷</span></div>
-        <div class="song-item"><span>《如果明天就是下一生》</span><span>词:张卉湄 曲:石青如</span></div>
-        <div class="song-item"><span>《我喜欢》</span><span>词曲:金承志</span></div>
-        <div class="song-item"><span>《Mon Coeur se recommande à vous》</span><span>曲:Orlando di Lasso</span></div>
-        <div class="song-item"><span>《灯火里的中国》</span><span>词:田地 曲:舒楠</span></div>
-        <div style="margin-top: 14px; color: #d4af37; font-weight: 500;">⭐ AI好能编。</div>
+        <div class="song-item"><span>《雪花的快乐》</span><span>诗:徐志摩 曲:周鑫泉</span></div>
+        <div class="song-item"><span>《山中月》</span><span>词:徐志摩 曲:张士超</span></div>
+        <div class="song-item"><span>《玉门关》</span><span>词曲:金承志</span></div>
+        <div class="song-item"><span>《燕歌行》</span><span>词曲:金承志</span></div>
+        <div class="song-item"><span>《琉璃》</span><span>词:曹冠玉 刘芸彤 曲:曹冠玉</span></div>
     </div>
     </div>
 
@@ -791,13 +797,14 @@
     <div class="card fade-up">
         <h2>节目单</h2>
         <div style="color: #d4af37; font-size: 0.9rem; letter-spacing: 2px; margin: 8px 0 14px 0; text-align: center;">—— 下半场 ——</div>
-        <div class="song-item"><span>《星辰大海》</span><span>词:王平久 曲:常石磊</span></div>
-        <div class="song-item"><span>《追寻》</span><span>词:张和平 曲:舒楠</span></div>
-        <div class="song-item"><span>《声部介绍歌》</span><span>改编合唱</span></div>
-        <div class="song-item"><span>《Nella Fantasia》</span><span>曲:Ennio Morricone</span></div>
-        <div class="song-item"><span>《故乡的云》</span><span>词:小轩 曲:谭健常</span></div>
-        <div class="song-item"><span>《友谊地久天长》</span><span>苏格兰民歌</span></div>
-    </div>
+        <div class="song-item"><span>《无名的人》</span><span>词:唐恬 曲:钱雷</span></div>
+        <div class="song-item"><span>《传奇》</span><span>词:刘兵 曲:李健</span></div>
+        <div class="song-item"><span>《想要的一定实现》</span><span>词曲:金承志</span></div>
+        <div class="song-item"><span>《我喜欢》</span><span>词曲:金承志</span></div>
+        <div class="song-item"><span>《真的爱你》</span><span>词:小美 曲:黄家驹</span></div>
+        <div class="song-item"><span>《Hot chocolate》</span><span style="text-align: right;">Words by ANDY BECK<br>and BRIAN FISHER<br>Music by ANDY BECK</span></div>
+        <!-- <div style="margin-top: 14px; color: #d4af37; font-weight: 500;">⭐ 敬请期待</div> -->
+      </div>
     </div>
 
         <!-- 页面14：风采展示 -->
@@ -831,17 +838,17 @@
     <div class="page" id="page15">
       <div class="card fade-up" style="text-align: center;">
         <h2>致谢</h2>
-        <p>感谢所有为声歌队付出的小伙伴们，感谢指挥与艺术指导，感谢学校团委的支持。</p>
-        <p style="margin-top: 24px;">2026.05.31 期待您的到来，我们音乐厅见！</p>
+        <p style="text-align: center;">感谢所有为声歌队付出的小伙伴们<br>感谢指挥与艺术指导<br>感谢学校团委的支持</p>
+        <p style="margin-top: 24px;">2026.05.31 期待您的到来<br>我们音乐厅见！</p>
         <footer>江西财经大学“红星”艺术团声歌队 敬邀</footer>
       </div>
       <button 
         onclick="document.getElementById('page1').scrollIntoView({behavior: 'smooth'})" 
         style="margin-top: 3vh; background: rgba(212, 175, 55, 0.15); border: 1px solid #d4af37; color: #f0e6c5; padding: 10px 28px; border-radius: 40px; cursor: pointer; font-size: clamp(0.75rem, 2.8vw, 0.9rem); backdrop-filter: blur(4px); transition: all 0.3s; align-self: center;"
         onmouseover="this.style.background='#d4af37'; this.style.color='#0a0c10'"
-        onmouseleave="this.style.background='rgba(212, 175, 55, 0.15)'; this.style.color='#f0e6c5'"
-    >↑ 回到顶部 ↑</button>
+        onmouseleave="this.style.background='rgba(212, 175, 55, 0.15)'; this.style.color='#f0e6c5'">↑ 回到顶部 ↑</button>
     </div>
+  </div>
 
         <!-- 声部成员大弹窗 -->
     <div id="sectionModal" class="modal modal-hidden" onclick="closeSectionModal()">
@@ -857,8 +864,6 @@
       </div>
     </div>
 
-  </div>
-
 <!-- 弹窗 -->
 <div id="detailModal" class="modal modal-hidden" onclick="closeModal()">
     <div class="modal-content" onclick="event.stopPropagation()">
@@ -872,6 +877,104 @@
         <button onclick="closeModal()">关闭</button>
     </div>
 </div>
+<script>
+
+const bgCanvas = document.getElementById('bgCanvas');
+const ctx = bgCanvas.getContext('2d');
+
+function resizeCanvas() {
+    bgCanvas.width = window.innerWidth;
+    bgCanvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const vhToPx = (v) => v * window.innerHeight / 100;
+
+const particles = [];
+const minDistanceVh = 10; // 最小间距 10vh
+
+function isTooClose(newX, newY, particles, minDist) {
+    for (let p of particles) {
+        const dx = newX - p.x;
+        const dy = newY - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < minDist) return true;
+    }
+    return false;
+}
+
+for (let i = 0; i < 10; i++) {
+    let x, y;
+    let attempts = 0;
+    const minDistPx = vhToPx(minDistanceVh);
+    
+    do {
+        x = Math.random() * bgCanvas.width;
+        y = Math.random() * bgCanvas.height;
+        attempts++;
+        if (attempts > 50) break; // 防止死循环
+    } while (isTooClose(x, y, particles, minDistPx));
+    
+    const baseR = Math.random() * 0.8 + 0.3;
+    particles.push({
+        x, y,
+        rVh: baseR,
+        r: vhToPx(baseR),
+        speedVh: Math.random() * 0.01 + 0.005,
+        speed: vhToPx(Math.random() * 0.01 + 0.005),
+        opacity: Math.random() * 0.3 + 0.15,
+        baseOpacity: 0,
+        twinkleSpeed: Math.random() * 0.008 + 0.003,
+        twinkleOffset: Math.random() * Math.PI * 2
+    });
+}
+particles.forEach(p => {
+    p.baseOpacity = p.opacity;
+});
+
+window.addEventListener('resize', () => {
+    particles.forEach(p => {
+        p.r = vhToPx(p.rVh);
+        p.speed = vhToPx(p.speedVh);
+    });
+});
+
+function animateParticles() {
+    ctx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+    particles.forEach(p => {
+        p.y -= p.speed;
+        if (p.y < -vhToPx(2)) {
+            p.y = bgCanvas.height + vhToPx(2);
+            p.x = Math.random() * bgCanvas.width;
+        }
+        p.twinkleOffset += p.twinkleSpeed;
+        const twinkle = 0.6 + 0.4 * Math.sin(p.twinkleOffset);
+        const currentOpacity = p.baseOpacity * twinkle;
+        
+        const glow = p.r * 2;
+        
+        const gradient1 = ctx.createRadialGradient(p.x, p.y, p.r * 0.5, p.x, p.y, glow);
+        gradient1.addColorStop(0, `rgba(255, 235, 170, ${currentOpacity * 0.8})`);
+        gradient1.addColorStop(0.5, `rgba(255, 215, 100, ${currentOpacity * 0.3})`);
+        gradient1.addColorStop(1, 'rgba(212, 175, 55, 0)');
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, glow, 0, Math.PI * 2);
+        ctx.fillStyle = gradient1;
+        ctx.fill();
+        
+        const gradient2 = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+        gradient2.addColorStop(0, `rgba(255, 248, 220, ${currentOpacity})`);
+        gradient2.addColorStop(1, `rgba(255, 215, 100, ${currentOpacity * 0.5})`);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = gradient2;
+        ctx.fill();
+    });
+    requestAnimationFrame(animateParticles);
+}
+animateParticles();
+</script>
 
   <!-- 音乐浮动按钮 -->
   <div class="music-float" id="musicToggle">🎵</div>
@@ -983,79 +1086,78 @@ if (scrollArrow && heroCard) {
 // 声部成员数据
 const sectionMembers = {
     'S': [
-        { name: '陈韵晗', img: 'members/陈韵晗.png', title: '女高音', intro: 'xxxxxx' },
-        { name: '谭熙贝', img: 'members/谭熙贝.png', title: '女高音', intro: 'xxxxxx' },
-        { name: '高雯钰', img: 'members/高雯钰.png', title: '女高音', intro: 'xxxxxx' },
-        { name: '何佩燕', img: 'members/何佩燕.png', title: '女高音', intro: 'xxxxxx' },
-        { name: '宋子艺', img: 'members/宋子艺.png', title: '女高音', intro: 'xxxxxx' },
-        { name: '兰伊琪', img: 'members/兰伊琪.png', title: '女高音', intro: 'xxxxxx' },
-        { name: '吕圣祎', img: 'members/吕圣祎.png', title: '女高音', intro: 'xxxxxx' },
-        { name: '陈语涵', img: 'members/陈语涵.png', title: '女高音', intro: 'xxxxxx' },
-        { name: '王凯茜', img: 'members/王凯茜.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '陈韵晗', img: 'members/陈韵晗.jpg', title: '茶叶盒', intro: 'Come fly with me！\n请与我燃翼同征，直到世界尽头！' },
+        { name: '谭熙贝', img: 'members/谭熙贝.jpg', title: 'BB888不是BB88', intro: '女高声部丨唱高音会破音丨唱低音会卡痰丨唱中音换声点丨憧憬某天成为合唱小王丨愿望是天天开心恭喜发财^^幸福降临每个人手心ᰔᩚ ' },
+        { name: '高雯钰', img: 'members/高雯钰.jpg', title: '女高音', intro: 'xxxxxx' },
+        { name: '何佩燕', img: 'members/何佩燕.jpg', title: '女高音', intro: 'xxxxxx' },
+        { name: '宋子艺', img: 'members/宋子艺.jpg', title: '女高音', intro: 'xxxxxx' },
+        { name: '兰伊琪', img: 'members/兰伊琪.jpg', title: '女高音', intro: 'xxxxxx' },
+        { name: '吕圣祎', img: 'members/吕圣祎.jpg', title: '是祖国老花朵', intro: '&emsp;&emsp;我叫吕圣祎，我的性格随和温柔，乐观开朗，待人真诚坦率，日常随性松弛，我很爱交朋友，很好相处，做事踏实低调，不张扬不浮夸。\n&emsp;&emsp;平时有过不少朗诵和演讲的相关经历，常常参与台前表达的相关活动，慢慢锻炼出了不错的表达能力，也慢慢变得大方从容，敢于站上舞台表达自己，也慢慢学会好好说话、沉稳输出。\n&emsp;&emsp;生性喜欢唱歌，享受用歌声舒缓情绪、感受热爱。也享受与音乐合二为一的快乐。\n&emsp;&emsp;空闲时间是王者峡谷的常驻，是不折不扣的中路玩家，别的位置不擅长，只安稳守好中路就够，主打一个专一执着，呜呼~\n&emsp;&emsp;也很超级喜欢拍照记录生活，喜欢拿捏拍照氛围和角度，随手拍出大片的爽感，热爱收集生活里所有温柔又美好的瞬间。\n&emsp;&emsp;再用一句情怀收尾（仪式感不能少）。我偏爱自己熟悉且热爱的一切，安静也活泼，随性也认真，一直好好生活，自在生长。' },
+        { name: '陈语涵', img: 'members/陈语涵.jpg', title: '🐸', intro: '&emsp;&emsp;我是软件学院的陈语涵，好久不见，我比以前更忧郁了，你敢直视神吗' },
+        { name: '王凯茜', img: 'members/王凯茜.jpg', title: '高音起飞特派员\nAKA饭局主理人.wkx', intro: '&emsp;&emsp;我是王凯茜，也叫KC，声歌队女高声部长，来自金融学院。\n&emsp;&emsp;江财声歌队在队B-LIN，铉家军排头兵。比较社恐比较害羞，不太习惯主动搭话，很少参与吃饭剧本杀KTV，天生内向慢热ISFP（第三句话开始的人设仅供参考）。' },
         { name: '郭柔含', img: 'members/郭柔含.jpg', title: '该如何？', intro: '&emsp;&emsp;恭喜你一发抽中SSS级英雄该如何😉 凤凰鸣叫 百年难遇 留下三朵玫瑰花🌹🌹🌹 保佑全家平安🙏🙏🙏' },
-        { name: '褚婉娱', img: 'members/褚婉娱.png', title: '女高音', intro: 'xxxxxx' },
-        { name: '朱雨涵', img: 'members/朱雨涵.jpg', title: 'SENOUTH=w=', intro: '江苏淮安｜软工｜INFP｜已飞0国｜\n国家级身份证持有者｜CONO店铺资深买手｜\nSS\x27S非常驻嘉宾｜奇迹大陆土著｜\n熟练掌握蓝绿修改器｜产品遍地，欢迎品鉴～' },
-        { name: '甘溦祎', img: 'members/甘溦祎.png', title: '女高音', intro: 'xxxxxx' },
-        { name: '王筱雅', img: 'members/王筱雅.png', title: '女高音', intro: 'xxxxxx' },
-        { name: '龚钰涵', img: 'members/龚钰涵.png', title: '女高音', intro: 'xxxxxx' },
-        { name: '李雅滢', img: 'members/李雅滢.png', title: '女高音', intro: 'xxxxxx' },
-        { name: '邹雯佳', img: 'members/邹雯佳.png', title: '女高音', intro: 'xxxxxx' },
-        { name: '夏凯文', img: 'members/夏凯文.png', title: '女高音', intro: 'xxxxxx' },
-        { name: '罗子星', img: 'members/罗子星.png', title: '女高音', intro: 'xxxxxx' },
-        { name: '王婉婧', img: 'members/王婉婧.png', title: '女高音', intro: 'xxxxxx' },
+        { name: '褚婉娱', img: 'members/褚婉娱.jpg', title: '🐟', intro: '&emsp;&emsp;我是褚婉娱，来自艺术学院，一个爱唱歌的美术生，一个像i人的e人' },
+        { name: '朱雨涵', img: 'members/朱雨涵.jpg', title: 'SENOUTH=w=', intro: '江苏淮安｜软工｜INFP｜已飞0国｜国家级身份证持有者｜CONO店铺资深买手｜SS\x27S非常驻嘉宾｜奇迹大陆土著｜熟练掌握蓝绿修改器｜产品遍地，欢迎品鉴～' },
+        { name: '甘溦祎', img: 'members/甘溦祎.jpg', title: '𓇼🧈🍞→海星黄油小面包', intro: '&emsp;&emsp;我是甘溦祎！女高声部的快乐小海星✨\n&emsp;&emsp;我很喜欢合唱的氛围，也超级珍惜和大家一起排练、一起唱歌的时光，真心热爱声歌队，永远为爱奔赴！\n&emsp;&emsp;希望把所有的快乐都唱进歌里，和大家一起，把每一首歌都唱成我们的独家记忆！我爱声歌队！！！🎶' },
+        { name: '王筱雅', img: 'members/王筱雅.jpg', title: '女高音', intro: 'xxxxxx' },
+        { name: '龚钰涵', img: 'members/龚钰涵.jpg', title: '女高音', intro: 'xxxxxx' },
+        { name: '李雅滢', img: 'members/李雅滢.jpg', title: '女高音', intro: 'xxxxxx' },
+        { name: '邹雯佳', img: 'members/邹雯佳.jpg', title: '女高音', intro: 'xxxxxx' },
+        { name: '夏凯文', img: 'members/夏凯文.jpg', title: '外地一名较为嗜睡的女子', intro: '&emsp;&emsp;如果世界以痛吻我，我会给世界一个灭掉我的高音' },
+        { name: '罗子星', img: 'members/罗子星.jpg', title: '女高音', intro: 'xxxxxx' },
+        { name: '王婉婧', img: 'members/王婉婧.jpg', title: '女高音', intro: 'xxxxxx' },
     ],
     'A': [
-        { name: '汤子瑶', img: 'members/汤子瑶.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '汤子瑶', img: 'members/汤子瑶.jpg', title: '女中音', intro: 'xxxxxx' },
         { name: '张家慧', img: 'members/张家慧.jpg', title: '和声守护.部落公主.紫荆花', intro: '&emsp;&emsp;我是张家慧，是一名在声歌队945天的“老成员”，担当热可可般丝滑浓郁的女中角色，守护合唱的和声！' },
-        { name: '兰宇轩', img: 'members/兰宇轩.png', title: '女中音', intro: 'xxxxxx' },
-        { name: '邵晋菲', img: 'members/邵晋菲.png', title: '女中音', intro: 'xxxxxx' },
-        { name: '刘璟玥', img: 'members/刘璟玥.png', title: '女中音', intro: 'xxxxxx' },
-        { name: '杜奕煊', img: 'members/杜奕煊.png', title: '女中音', intro: 'xxxxxx' },
-        { name: '彭雅琦', img: 'members/彭雅琦.png', title: '女中音', intro: 'xxxxxx' },
-        { name: '邹雨宣', img: 'members/邹雨宣.png', title: '女中音', intro: 'xxxxxx' },
-        { name: '张妙涵', img: 'members/张妙涵.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '兰宇轩', img: 'members/兰宇轩.jpg', title: '女中音', intro: 'xxxxxx' },
+        { name: '邵晋菲', img: 'members/邵晋菲.jpg', title: '女中音', intro: 'xxxxxx' },
+        { name: '刘璟玥', img: 'members/刘璟玥.jpg', title: '女中音', intro: 'xxxxxx' },
+        { name: '杜奕煊', img: 'members/杜奕煊.jpg', title: '写电子邀请函的', intro: '会写码，会手工，会跳舞，\n会唱歌，会画画，会自闭。\n另寻人教我C++。' },
+        { name: '彭雅琦', img: 'members/彭雅琦.jpg', title: '女中音', intro: 'xxxxxx' },
+        { name: '邹雨宣', img: 'members/邹雨宣.jpg', title: '女中音', intro: 'xxxxxx' },
+        { name: '张妙涵', img: 'members/张妙涵.jpg', title: '女中音', intro: 'xxxxxx' },
         { name: '颜瑜', img: 'members/颜瑜.jpg', title: '女中咸鱼一条', intro: '&emsp;&emsp;我是颜瑜，来自经济学院，属于合唱团女中音。不来听我们音乐会的话，我就要变异咬人了😕' },
-        { name: '徐安然', img: 'members/徐安然.png', title: '女中音', intro: 'xxxxxx' },
-        { name: '许歆祺', img: 'members/许歆祺.png', title: '女中音', intro: 'xxxxxx' },
-        { name: '曾佳怡', img: 'members/曾佳怡.png', title: '女中音', intro: 'xxxxxx' },
-        { name: '郭忆', img: 'members/郭忆.png', title: '女中音', intro: 'xxxxxx' },
-        { name: '谢雪', img: 'members/谢雪.png', title: '女中音', intro: 'xxxxxx' },
-        { name: '李文依', img: 'members/李文依.png', title: '女中音', intro: 'xxxxxx' },
-        { name: '胡钰浣', img: 'members/胡钰浣.png', title: '女中音', intro: 'xxxxxx' },
-        { name: '何璐', img: 'members/何璐.png', title: '女中音', intro: 'xxxxxx' },
-        { name: '沈雅玲', img: 'members/沈雅玲.png', title: '女中音', intro: 'xxxxxx' },
-        { name: '陈柯羽', img: 'members/陈柯羽.png', title: '女中音', intro: 'xxxxxx' },
+        { name: '徐安然', img: 'members/徐安然.jpg', title: '女中音', intro: 'xxxxxx' },
+        { name: '许歆祺', img: 'members/许歆祺.jpg', title: '女中音', intro: 'xxxxxx' },
+        { name: '曾佳怡', img: 'members/曾佳怡.jpg', title: '女中音', intro: 'xxxxxx' },
+        { name: '谢雪', img: 'members/谢雪.jpg', title: '女中音', intro: 'xxxxxx' },
+        { name: '李文依', img: 'members/李文依.jpg', title: '女中音', intro: 'xxxxxx' },
+        { name: '胡钰浣', img: 'members/胡钰浣.jpg', title: '女中音', intro: 'xxxxxx' },
+        { name: '何璐', img: 'members/何璐.jpg', title: '女中音', intro: 'xxxxxx' },
+        { name: '沈雅玲', img: 'members/沈雅玲.jpg', title: '女中音', intro: 'xxxxxx' },
+        { name: '陈柯羽', img: 'members/陈柯羽.jpg', title: '女中音', intro: 'xxxxxx' },
         { name: '韦祥玉', img: 'members/韦祥玉.png', title: '女中音', intro: 'xxxxxx' },
       ],
     'T': [
-        { name: '熊冠哲', img: 'members/熊冠哲.png', title: '男高音', intro: 'xxxxxx' },
-        { name: '叶嘉乐', img: 'members/叶嘉乐.png', title: '男高音', intro: 'xxxxxx' },
-        { name: '郭一鸣', img: 'members/郭一鸣.png', title: '男高音', intro: 'xxxxxx' },
-        { name: '朱程昱祺', img: 'members/朱程昱祺.png', title: '男高音', intro: 'xxxxxx' },
-        { name: '熊文', img: 'members/熊文.png', title: '男高音', intro: 'xxxxxx' },
-        { name: '程一龙', img: 'members/程一龙.png', title: '男高音', intro: 'xxxxxx' },
-        { name: '刘逸哲', img: 'members/刘逸哲.png', title: '男高音', intro: 'xxxxxx' },
-        { name: '贺俊杰', img: 'members/贺俊杰.png', title: '男高音', intro: 'xxxxxx' },
+        { name: '熊冠哲', img: 'members/熊冠哲.jpg', title: '男高音', intro: 'xxxxxx' },
+        { name: '叶嘉乐', img: 'members/叶嘉乐.jpg', title: '男高音', intro: 'xxxxxx' },
+        { name: '郭一鸣', img: 'members/郭一鸣.jpg', title: '男高音', intro: 'xxxxxx' },
+        { name: '朱程昱祺', img: 'members/朱程昱祺.jpg', title: '男高音', intro: 'xxxxxx' },
+        { name: '熊文', img: 'members/熊文.jpg', title: '男高音', intro: 'xxxxxx' },
+        { name: '程一龙', img: 'members/程一龙.jpg', title: '男高音', intro: 'xxxxxx' },
+        { name: '刘逸哲', img: 'members/刘逸哲.jpg', title: '作词家', intro: '&emsp;&emsp;本人刘逸哲，金融学院，希望每个高音都能顶上去' },
+        { name: '贺俊杰', img: 'members/贺俊杰.jpg', title: '男高音', intro: 'xxxxxx' },
         { name: '桑正阳', img: 'members/桑正阳.jpg', title: '乐呵呵的悲观主义者', intro: '&emsp;&emsp;本人风趣幽默，耐心体贴，热爱生活，喜好音乐、运动、摄影……算是个有趣的灵魂吧：）' },
-        { name: '车立庸', img: 'members/车立庸.png', title: '男高音', intro: 'xxxxxx' },
-        { name: '李文轩', img: 'members/李文轩.png', title: '男高音', intro: 'xxxxxx' },
-        { name: '蔡麒轩', img: 'members/蔡麒轩.png', title: '男高音', intro: 'xxxxxx' },
-        { name: '毛嘉辉', img: 'members/毛嘉辉.png', title: '男高音', intro: 'xxxxxx' },
-        { name: '龙泽川', img: 'members/龙泽川.jpeg', title: '小龙', intro: '新男高们，我会把你们打回男低\n如果男高是你们的，证明给我看\n过得了我，再谈换届\n这第四次的音乐会，我想送给我的男通声部' },
-        { name: '杜佳熠', img: 'members/杜佳熠.png', title: '男高音', intro: 'xxxxxx' },
+        { name: '车立庸', img: 'members/车立庸.jpg', title: '男高音', intro: 'xxxxxx' },
+        { name: '李文轩', img: 'members/李文轩.jpg', title: '男高音', intro: 'xxxxxx' },
+        { name: '蔡麒轩', img: 'members/蔡麒轩.jpg', title: '少狐', intro: '&emsp;&emsp;哈哈，我真的太懂你这种感觉了！！那我就给你最直接、最真相、最不绕弯、最扎心、最硬核、最干脆、最不墨迹、最戳痛点、最不留情面、最一针见血、最开门见山、最单刀直入、最不铺垫、最不客套、最不煽情、最不废话、最不拐弯、最不磨叽、最不装、最不端着、最不啰嗦、最不拖沓、最不委婉、最不掩饰、最不藏着掖着、最直白、最露骨、最实在、最通透、最毒辣、最爽快、最解气、最上头、最够劲、最过瘾、最粗暴、最有效、最狠、最准、最稳、最绝、最顶、最炸、最刚、最烈、最飒、最莽、最冲、最猛、最脆、最亮、最透、最干、最净、最利落、最霸道、最硬核、最生猛、最狂野、最直白、最粗暴、最不讲虚的、最不玩套路、最不搞形式、最不整虚头巴脑、最只讲干货、最只说重点、最只给结果、最只聊真相、最只谈核心、最只戳关键的答案吧，你的使命还没结束\n&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;👱🏻‍♀️&emsp;🟢\n&emsp;&emsp;&emsp;&emsp;&emsp;🫴🏻👗&ensp;🫴🏻\n&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;🦵🏻&ensp;🦵🏻' },
+        { name: '毛嘉辉', img: 'members/毛嘉辉.jpg', title: '男高音', intro: 'xxxxxx' },
+        { name: '龙泽川', img: 'members/龙泽川.jpeg', title: '小龙', intro: '新男高们，我会把你们打回男低\n如果男高是你们的，证明给我看\n过得了我，再谈换届\n这第四次的音乐会，\n我想送给我的男通声部' },
+        { name: '杜佳熠', img: 'members/杜佳熠.jpg', title: '男高音', intro: 'xxxxxx' },
     ],
     'B': [
-        { name: '张育昊', img: 'members/张育昊.png', title: '男低音', intro: 'xxxxxx' },
+        { name: '张育昊', img: 'members/张育昊.jpg', title: '男低音', intro: 'xxxxxx' },
         { name: '刘宇杰', img: 'members/刘宇杰.jpg', title: 'JjCo1a', intro: '&emsp;&emsp;dev1ce他的狙，😲他是已经被白走了吗？😲啊？😲还？😲啊？😲devi，😲啊？😲这是人类啊？😭哦，br0也没杀人😭这局，这局没有人类了，😭只有🐍😭，只有🐭😭，只有沟槽的野榜😭，只有...啊😭我在看什么😭' },
-        { name: '孙嘉泽', img: 'members/孙嘉泽.png', title: '男低音', intro: 'xxxxxx' },
-        { name: '陈思恩', img: 'members/陈思恩.png', title: '男低音', intro: 'xxxxxx' },
-        { name: '李成鸿', img: 'members/李成鸿.png', title: '男低音', intro: 'xxxxxx' },
-        { name: '黄聿江', img: 'members/黄聿江.png', title: '男低音', intro: 'xxxxxx' },
-        { name: '熊浩屹', img: 'members/熊浩屹.png', title: '男低音', intro: 'xxxxxx' },
-        { name: '周家军', img: 'members/周家军.png', title: '男低音', intro: 'xxxxxx' },
-        { name: '陈宇涵', img: 'members/陈宇涵.png', title: '男低音', intro: 'xxxxxx' },
-        { name: '罗天宇', img: 'members/罗天宇.png', title: '男低音', intro: 'xxxxxx' },
-        { name: '林思成', img: 'members/林思成.png', title: '男低音', intro: 'xxxxxx' },
+        { name: '孙嘉泽', img: 'members/孙嘉泽.jpg', title: '男低音', intro: 'xxxxxx' },
+        { name: '陈思恩', img: 'members/陈思恩.jpg', title: '男低音', intro: 'xxxxxx' },
+        { name: '李成鸿', img: 'members/李成鸿.jpg', title: '男低音', intro: 'xxxxxx' },
+        { name: '黄聿江', img: 'members/黄聿江.jpg', title: '男低音', intro: 'xxxxxx' },
+        { name: '熊浩屹', img: 'members/熊浩屹.jpg', title: '男低音', intro: 'xxxxxx' },
+        { name: '周家军', img: 'members/周家军.jpg', title: '男低音', intro: 'xxxxxx' },
+        { name: '陈宇涵', img: 'members/陈宇涵.jpg', title: '男低音', intro: 'xxxxxx' },
+        { name: '罗天宇', img: 'members/罗天宇.jpg', title: '男低音', intro: 'xxxxxx' },
+        { name: '林思成', img: 'members/林思成.jpg', title: '男低音', intro: 'xxxxxx' },
     ]
 };
 
@@ -1269,6 +1371,44 @@ const sectionMembers = {
       galleryScroll.scrollLeft = scrollLeftPos - walk;
     });
     // ========== 画廊逻辑结束 ==========
+
+// 页面加载完成后执行
+window.addEventListener('load', () => {
+    // 画廊定位到第一张
+    setTimeout(() => {
+        if (allSlides && allSlides[cloneCountBefore]) {
+            galleryScroll.scrollLeft = allSlides[cloneCountBefore].offsetLeft - galleryScroll.offsetWidth / 2 + allSlides[cloneCountBefore].offsetWidth / 2;
+        }
+    }, 300);
+
+    // 👇 首屏箭头自动演示一次
+    setTimeout(() => {
+        if (heroCard && scrollArrow) {
+            const svg = scrollArrow.querySelector('svg');
+            if (svg) svg.style.animation = 'none';
+            
+            heroCard.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)';
+            heroCard.style.transform = 'translateY(-8vh)';
+            scrollArrow.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)';
+            scrollArrow.style.transform = 'translateX(-50%) translateY(-8vh)';
+            
+            setTimeout(() => {
+                heroCard.style.transition = 'transform 0.5s ease-out';
+                heroCard.style.transform = 'translateY(0)';
+                scrollArrow.style.transition = 'transform 0.5s ease-out';
+                scrollArrow.style.transform = 'translateX(-50%) translateY(0)';
+                
+                setTimeout(() => {
+                    heroCard.style.transition = '';
+                    heroCard.style.transform = '';
+                    scrollArrow.style.transition = '';
+                    scrollArrow.style.transform = 'translateX(-50%)';
+                    if (svg) svg.style.animation = 'arrowFloat 2.5s ease-in-out infinite';
+                }, 500);
+            }, 500);
+        }
+    }, 500);
+});
 
     })();
   </script>
