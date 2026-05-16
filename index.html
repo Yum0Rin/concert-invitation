@@ -17,7 +17,11 @@
     }
 
     body {
-      background: #0a0c10;
+      background: 
+        repeating-linear-gradient(45deg, rgba(255, 255, 200, 0.25) 0px, rgba(255,255,200,0.25) 1px, transparent 1px, transparent 12px),
+        repeating-linear-gradient(135deg, rgba(255,255,200,0.25) 0px, rgba(255,255,200,0.25) 1px, transparent 1px, transparent 12px),
+        radial-gradient(ellipse at 40% 30%, #121724, #05070c);
+      background-blend-mode: overlay;
       overflow-x: hidden;
       font-family: 'STSong', 'SimSun', '宋体', '仿宋', 'Noto Serif SC', 'Times New Roman', Georgia, serif;
       display: flex;
@@ -40,7 +44,7 @@
         scroll-behavior: smooth;
         position: relative;
         z-index: 1;
-        background: radial-gradient(#141e2d);
+        background: transparent;
         scroll-snap-stop: always; 
         overscroll-behavior-y: contain;
     }
@@ -162,7 +166,7 @@
       z-index: 1;
       text-align: center;
       padding: 30px 10px 20px;
-      background: radial-gradient(circle at top, rgba(63, 67, 86, 0.75), rgba(25, 29, 42, 0.85));
+      background: radial-gradient(circle at top, #333640, #14151a);
       border-radius: 56px 56px 40px 40px;
       margin-bottom: 8px;
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 5px 15px rgba(0, 0, 0, 0.4);
@@ -230,17 +234,42 @@
     }
 
     /* 卡片样式 */
-    .card {
-        background: radial-gradient(circle at top, rgba(63, 67, 86, 0.75), rgba(25, 29, 42, 0.85));
-        backdrop-filter: blur(12px);
-        border-radius: 56px 56px 40px 40px;
-        padding: 5vh 8vw;
-        box-shadow:0 15px 35px rgba(0, 0, 0, 0.8), 0 5px 15px rgba(0, 0, 0, 0.4);
-        width: 90vw;
-        max-width: 90vw;
-        margin: 0 auto;
-        box-sizing: border-box;
-    }
+.card {
+    background: radial-gradient(circle at top, #333640, #14151a);
+    border-radius: 56px 56px 40px 40px;
+    padding: 5vh 8vw;
+        box-shadow: 
+        inset 0 1px 2px rgba(255, 255, 255, 0.15),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+        0 15px 35px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(212, 175, 55, 0.2);
+    width: 90vw;
+    max-width: 90vw;
+    margin: 0 auto;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.25'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    border-radius: inherit;
+    z-index: 1;
+}
+
+/* 确保卡片内容在伪元素之上 */
+.card > * {
+    position: relative;
+    z-index: 2;
+}
 
     .card h2 {
       font-size: clamp(1.5rem, 7vw, 2.4rem);
@@ -690,7 +719,7 @@
             <img src="members/xxx.jpg" alt="xxx" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
             <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">xxx</div>
         </div>
-        <div class="person-item" onclick="showDetail('主持人', 'xxx', '播音主持专业，声音醇厚，善于带动现场气氛。')" style="flex: 1; max-width: 38vw;">
+        <div class="person-item" onclick="showDetail('主持人', 'xxx', 'xxxxxx')" style="flex: 1; max-width: 38vw;">
             <img src="members/xxx.jpg" alt="xxx" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3vw; border: 3px solid #d4af37; box-shadow: 0 12px 30px rgba(0,0,0,0.6);">
             <div class="person-name" style="font-size: 1.1rem; margin-top: 12px;">xxx</div>
         </div>
@@ -725,7 +754,7 @@
         <h2>声歌队</h2>
         <div class="person-item" onclick="showDetail('合唱团', '红星艺术团声歌队', '&emsp;&emsp;江西财经大学\u201C红星\u201D艺术团声歌队，隶属于校艺术团，由来自学校各个年级不同专业的热爱音乐的学生组成。他们以动人的旋律、和谐的音色和精准的音高，呈现出深情的合唱作品。\n&emsp;&emsp;曾获全国第六届大学生艺术展国家级三等奖，江西省第二届、第三届大中小学生合唱比赛大学生甲组一等奖、江西省大学生第十一届艺术展演省级二等奖、江西省大学生第十届艺术展演省级二等奖、江西省大学生第九届艺术展演省级三等奖，江西省\u201C长征组歌\u201D合唱比赛三等奖等多项艺术类奖项。')">
         <img src="https://picsum.photos/id/98/600/300" alt="声歌队合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
-        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">&emsp;&emsp;江西财经大学"红星"艺术团声歌队，现有团员六十余人，来自各院系热爱合唱的学子。多次获得江西省大学生艺术展演一等奖，秉承"以美育人，以声传情"。</p>
+        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">江西财经大学"红星"艺术团声歌队，现有团员六十余人，来自各院系热爱合唱的学子。多次获得江西省大学生艺术展演一等奖，秉承"以美育人，以声传情"。</p>
         </div>
         <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看简介</p>
     </div>
@@ -735,9 +764,9 @@
     <div class="page" id="page8">
     <div class="card fade-up" style="text-align: center;">
         <h2>Soprano 女高音</h2>
-        <div class="person-item" onclick="openSectionDetail('S', 'S · 女高音', '&emsp;&emsp;女高音是合唱中最高、最明亮的声部，如同星空中的北极星。她们用清澈透亮的音色，唱出旋律的灵魂。')">
+        <div class="person-item" onclick="openSectionDetail('S', 'S · 女高音', '女高音是合唱中最高、最明亮的声部，如同星空中的北极星。她们用清澈透亮的音色，唱出旋律的灵魂。')">
         <img src="soprano_group.jpg" alt="女高音声部合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
-        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">&emsp;&emsp;女高音声部，合唱中最高的声部，担任主旋律的演绎。音色明亮、清澈，如星空中的北极星。</p>
+        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">女高音声部，合唱中最高的声部，担任主旋律的演绎。<br>音色明亮、清澈，如星空中的北极星。</p>
         </div>
         <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看成员介绍</p>
     </div>
@@ -747,9 +776,9 @@
     <div class="page" id="page9">
     <div class="card fade-up" style="text-align: center;">
         <h2>Alto 女中音</h2>
-        <div class="person-item" onclick="openSectionDetail('A', 'A · 女中音', '&emsp;&emsp;女中音是合唱中温暖的中声部，如同大地般沉稳包容。她们用醇厚的音色填充和声的肌理。')">
+        <div class="person-item" onclick="openSectionDetail('A', 'A · 女中音', '女中音是合唱中温暖的中声部，如同大地般沉稳包容。她们用醇厚的音色填充和声的肌理。')">
         <img src="alto_group.jpg" alt="女中音声部合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
-        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">&emsp;&emsp;女中音声部，合唱中的中声部，为和声提供温暖支撑。音色醇厚、柔美，如大地般包容。</p>
+        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">女中音声部，合唱中的中声部，为和声提供温暖支撑。<br>音色醇厚、柔美，如大地般包容。</p>
         </div>
         <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看成员介绍</p>
     </div>
@@ -759,9 +788,9 @@
     <div class="page" id="page10">
     <div class="card fade-up" style="text-align: center;">
         <h2>Tenor 男高音</h2>
-        <div class="person-item" onclick="openSectionDetail('T', 'T · 男高音', '&emsp;&emsp;男高音是合唱中充满力量的高声部，如同破晓的晨光。他们用富有穿透力的音色，赋予音乐激情与张力。')">
+        <div class="person-item" onclick="openSectionDetail('T', 'T · 男高音', '男高音是合唱中充满力量的高声部，如同破晓的晨光。他们用富有穿透力的音色，赋予音乐激情与张力。')">
         <img src="tenor_group.jpg" alt="男高音声部合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
-        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">&emsp;&emsp;男高音声部，合唱中充满力量的高声部。音色富有穿透力，如同破晓的晨光。</p>
+        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">男高音声部，合唱中充满力量的高声部。<br>音色富有穿透力，如同破晓的晨光。</p>
         </div>
         <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看成员介绍</p>
     </div>
@@ -771,9 +800,9 @@
     <div class="page" id="page11">
     <div class="card fade-up" style="text-align: center;">
         <h2>Bass 男低音</h2>
-        <div class="person-item" onclick="openSectionDetail('B', 'B · 男低音', '&emsp;&emsp;男低音是合唱中最深沉、最浑厚的声部，如同大地的心跳。他们用深厚的音色为合唱奠定坚实的基础。')">
+        <div class="person-item" onclick="openSectionDetail('B', 'B · 男低音', '男低音是合唱中最深沉、最浑厚的声部，如同大地的心跳。他们用深厚的音色为合唱奠定坚实的基础。')">
         <img src="bass_group.jpg" alt="男低音声部合照" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4vw; border: 2px solid #d4af37; box-shadow: 0 8px 18px rgba(0,0,0,0.6); cursor: pointer;">
-        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">&emsp;&emsp;男低音声部，合唱中最深沉浑厚的声部。音色宽广、深厚，如同大地的心跳。</p>
+        <p style="margin-top:14px; color: #d3cfbc; font-size: clamp(0.85rem, 3.5vw, 1rem);">男低音声部，合唱中最深沉浑厚的声部。<br>音色宽广、深厚，如同大地的心跳。</p>
         </div>
         <p class="scroll-hint" style="margin-top: 4vh;transform: scale(1.5);">点击照片查看成员介绍</p>
     </div>
