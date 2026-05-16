@@ -25,10 +25,9 @@
       min-height: -webkit-fill-available;
       background-attachment: fixed;
       background: 
-        repeating-linear-gradient(45deg, rgba(255, 255, 200, 0.25) 0px, rgba(255,255,200,0.25) 1px, transparent 1px, transparent 12px),
-        repeating-linear-gradient(135deg, rgba(255,255,200,0.25) 0px, rgba(255,255,200,0.25) 1px, transparent 1px, transparent 12px),
+        repeating-linear-gradient(45deg, rgba(255, 255, 200, 0.05) 0px, rgba(255,255,200,0.05) 1px, transparent 1px, transparent 12px),
+        repeating-linear-gradient(135deg, rgba(255,255,200,0.05) 0px, rgba(255,255,200,0.05) 1px, transparent 1px, transparent 12px),
         radial-gradient(ellipse at 40% 30%, #121724, #05070c);
-      background-blend-mode: overlay;
       overflow-x: hidden;
       font-family: 'STSong', 'SimSun', '宋体', '仿宋', 'Noto Serif SC', 'Times New Roman', Georgia, serif;
       display: flex;
@@ -1418,17 +1417,26 @@ const sectionMembers = {
       const walk = (x - startX) * 1.5;
       galleryScroll.scrollLeft = scrollLeftPos - walk;
     });
+
+        // 初始化定位到第一张 — 等用户进入画廊页再执行
+const galleryPage = document.getElementById('page14');
+if (galleryPage) {
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            // 只执行一次
+            if (allSlides && allSlides[cloneCountBefore] && galleryScroll.scrollLeft === 0) {
+                const targetScrollLeft = allSlides[cloneCountBefore].offsetLeft - galleryScroll.offsetWidth / 2 + allSlides[cloneCountBefore].offsetWidth / 2;
+                galleryScroll.scrollLeft = targetScrollLeft;
+            }
+            observer.disconnect();
+        }
+    }, { threshold: 0.1 });
+    observer.observe(galleryPage);
+}
     // ========== 画廊逻辑结束 ==========
 
 // 页面加载完成后执行
 window.addEventListener('load', () => {
-    // 画廊定位到第一张
-    setTimeout(() => {
-        if (allSlides && allSlides[cloneCountBefore]) {
-            galleryScroll.scrollLeft = allSlides[cloneCountBefore].offsetLeft - galleryScroll.offsetWidth / 2 + allSlides[cloneCountBefore].offsetWidth / 2;
-        }
-    }, 300);
-
     // 👇 首屏箭头自动演示一次
     setTimeout(() => {
         if (heroCard && scrollArrow) {
